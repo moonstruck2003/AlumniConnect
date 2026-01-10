@@ -71,6 +71,7 @@ The platform addresses the lack of a centralized alumni network by providing con
 
 ### Mock UI
 The user interface will follow a clean, professional, and minimal design approach. Role-based dashboards will ensure intuitive navigation for students, alumni, and administrators.
+🔗 **Figma Design (Demo):** [View UI on Figma](https://www.figma.com/make/lYqtzROdWsv4ZSJrmNEKhL/Alumni-Interaction-Platform?p=f&fullscreen=1)
 
 ---
 
