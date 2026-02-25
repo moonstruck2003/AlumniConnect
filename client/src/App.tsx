@@ -12,7 +12,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path={'/'} element={<Login />} />
+        <Route path={'/'} element={<Home />} />
         <Route path={'/login'} element={<Login />} />
         <Route path={'/signup'} element={<Signup />} />
         <Route
@@ -22,7 +22,7 @@ function App() {
             </BaseLayout>
           }
         >
-          <Route path={'/home'} element={<Home />} />
+          {/* <Route path={'/home'} element={<Home />} /> removed since Home is now default */}
           <Route path={'/sessions'} element={<Sessions />} />
         </Route>
       </Routes>
