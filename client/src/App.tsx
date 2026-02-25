@@ -1,6 +1,7 @@
 import { Outlet, Route, Routes } from 'react-router';
 import BaseLayout from './views/BaseLayout';
 import Home from './views/Home';
+import Login from './views/Login';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import { Toaster } from 'react-hot-toast';
@@ -10,6 +11,8 @@ function App() {
   return (
     <>
       <Routes>
+        <Route path={'/'} element={<Login />} />
+        <Route path={'/login'} element={<Login />} />
         <Route
           element={
             <BaseLayout>
@@ -17,7 +20,7 @@ function App() {
             </BaseLayout>
           }
         >
-          <Route path={'/'} element={<Home />} />
+          <Route path={'/home'} element={<Home />} />
           <Route path={'/sessions'} element={<Sessions />} />
         </Route>
       </Routes>
