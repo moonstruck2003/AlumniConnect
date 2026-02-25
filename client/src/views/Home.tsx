@@ -1,109 +1,172 @@
-import { useEffect, useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
-import ApiClient from '../api';
-import toast from 'react-hot-toast';
-import { calculateAttendanceMarks, totalMarksPerDay } from '../helpers/util';
-
-const convertToHm = (seconds: number | undefined) => {
-  if (!seconds) return '0';
-  const hours = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
-  return `${hours}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-};
-
-interface SessionInfo {
-  timeRemaining: number; // in seconds
-  name: string;
-  duration?: string;
-  created_at?: string;
-}
-
-const apiClient = new ApiClient();
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import {
+  Users, TrendingUp, Briefcase, Calendar,
+  BookOpen, ArrowRight, LayoutDashboard, Menu, X
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
+import './Home.css';
 
 export default function Home() {
-  const [rollValue, setRollValue] = useState('');
-  const [sessionInfo, setSessionInfo] = useState<SessionInfo | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    // api call to get sessionInfo
-    // 1 session will be running at a time
-    const getSession = async () => {
-      const session = await apiClient.getSession();
-      console.log(session);
+  const stats = [
+    { icon: <Users size={24} />, color: 'purple', label: 'Total Alumni', value: '12,450', trend: '+5.2%' },
+    { icon: <TrendingUp size={24} />, color: 'green', label: 'Active Mentors', value: '842', trend: '+12.4%' },
+    { icon: <Briefcase size={24} />, color: 'pink', label: 'Job Postings', value: '156', trend: '+8.1%' },
+    { icon: <Calendar size={24} />, color: 'orange', label: 'Upcoming Events', value: '23', trend: '+3.5%' },
+  ];
 
-      if (session.success) {
-        setSessionInfo({
-          ...session,
-          timeRemaining: session.timeRemaining * 60,
-          name: session.name,
-        });
-      }
-    };
+  const activities = [
+    { avatar: 'S', color: 'blue', text: 'accepted your mentorship request', author: 'Sarah Johnson', time: '2 hours ago' },
+    { avatar: 'T', color: 'indigo', text: 'posted a new Software Engineer position', author: 'Tech Corp', time: '5 hours ago' },
+    { avatar: 'A', color: 'blue', text: 'Networking Mixer is happening next week', author: 'Alumni Event', time: '1 day ago' },
+    { avatar: 'M', color: 'purple', text: 'joined as a mentor', author: 'Michael Chen', time: '2 days ago' },
+  ];
 
-    getSession();
-  }, []);
-
-  // Decrement timeRemaining every second
-  useEffect(() => {
-    if (sessionInfo && sessionInfo.timeRemaining <= 0) return;
-
-    const timer = setInterval(() => {
-      setSessionInfo((p) => {
-        if (!p) return null;
-        return {
-          ...p,
-          timeRemaining: p.timeRemaining - 1,
-        };
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [sessionInfo?.timeRemaining]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const res = await apiClient.submitAttendance(parseInt(rollValue));
-    console.log('res', res);
-
-    console.log('sessionInfo', sessionInfo);
-
-    if (res.success && sessionInfo) {
-      const attendanceMarks = calculateAttendanceMarks(res.attendance.created_at, sessionInfo.duration!, sessionInfo.created_at!);
-      toast.success(`Obtained marks: ${attendanceMarks} out of ${totalMarksPerDay}`, {
-        duration: 5000,
-      });
-    } else {
-      toast.error(res.message);
-    }
-
-    setRollValue('');
-  };
+  const quickActions = [
+    { title: 'Find a Mentor', desc: 'Connect with experienced alumni' },
+    { title: 'Browse Jobs', desc: 'Explore opportunities from alumni' },
+    { title: 'View Directory', desc: 'Search for alumni by industry' },
+    { title: 'Join Events', desc: 'Register for upcoming gatherings' },
+  ];
 
   return (
-    <div className="pt-4 d-flex justify-content-around items-center">
-      {!sessionInfo && <p className="text-3xl font-light fs-4">No active session found</p>}
-      {sessionInfo && (
-        <div className="w-lg-400">
-          <div className="text-center">
-            <h2 className="text-sm font-medium text-muted-foreground mb-2">Session</h2>
-            <p className="text-3xl font-light fs-4">{sessionInfo?.name}</p>
-          </div>
-          <div className="text-center">
-            <h2 className="text-sm font-medium text-muted-foreground mb-2">Remaining</h2>
-            <p className="text-3xl font-light fs-4">{convertToHm(sessionInfo?.timeRemaining)}</p>
-          </div>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-            <Form.Control type="number" placeholder="Enter roll" value={rollValue} onChange={(e) => setRollValue(e.target.value)} className="w-full text-center border-2" />
-            <div className="d-grid gap-2 mt-3">
-              <Button variant="primary" onClick={handleSubmit}>
-                Submit
-              </Button>
+    <div className="home-page">
+      <div className="home-container">
+
+        {/* Navigation Bar */}
+        <motion.nav
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="home-nav"
+        >
+          <div className="nav-brand">
+            <div className="brand-icon">
+              <span style={{ fontWeight: 800 }}>AC</span>
             </div>
-          </Form.Group>
+            <div className="brand-title">
+              <span className="brand-name">AlumniConnect</span>
+              <span className="brand-subtitle">University Network</span>
+            </div>
+          </div>
+
+          <button
+            className="mobile-menu-btn"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+
+          <div className={`nav-menu-wrapper ${isMobileMenuOpen ? 'active' : ''}`}>
+            <div className="nav-links">
+              <a href="#" className="nav-item active"><LayoutDashboard size={18} /> Dashboard</a>
+              <a href="#" className="nav-item"><Users size={18} /> Alumni Directory</a>
+              <a href="#" className="nav-item"><BookOpen size={18} /> Mentorship</a>
+              <a href="#" className="nav-item"><Briefcase size={18} /> Jobs & Internships</a>
+              <a href="#" className="nav-item"><Calendar size={18} /> Events</a>
+            </div>
+
+            <div className="nav-auth">
+              <Link to="/login" className="btn-login">Login</Link>
+              <Link to="/signup" className="btn-signup">Sign up</Link>
+            </div>
+          </div>
+        </motion.nav>
+
+        {/* Hero Section */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.1, duration: 0.5 }}
+          className="hero-card"
+        >
+          <div className="hero-content">
+            <h1 className="hero-greeting">Welcome to AlumniConnect!</h1>
+            <p className="hero-subtext">Stay connected with your university community, find mentors, and explore opportunities.</p>
+          </div>
+          {/* Abstract background elements could go here */}
+        </motion.div>
+
+        {/* Stats Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          className="stats-grid"
+        >
+          {stats.map((stat, idx) => (
+            <motion.div
+              key={idx}
+              whileHover={{ y: -5 }}
+              className="stat-card"
+            >
+              <div className="stat-header">
+                <div className={`stat-icon ${stat.color}`}>
+                  {stat.icon}
+                </div>
+                <span className="stat-trend">{stat.trend}</span>
+              </div>
+              <div className="stat-value">{stat.value}</div>
+              <div className="stat-label">{stat.label}</div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Main Content Grid */}
+        <div className="content-grid">
+
+          {/* Recent Activity */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="content-section"
+          >
+            <h3 className="section-title">Recent Activity</h3>
+            <div className="activity-list">
+              {activities.map((item, idx) => (
+                <div key={idx} className="activity-item">
+                  <div className={`activity-avatar ${item.color}`}>
+                    {item.avatar}
+                  </div>
+                  <div className="activity-content">
+                    <p><strong>{item.author}</strong> {item.text}</p>
+                    <span className="activity-time">{item.time}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Quick Actions */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="content-section"
+          >
+            <h3 className="section-title">Quick Actions</h3>
+            <div className="actions-list">
+              {quickActions.map((action, idx) => (
+                <motion.button
+                  key={idx}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="action-card"
+                >
+                  <div className="action-info">
+                    <h4>{action.title}</h4>
+                    <p>{action.desc}</p>
+                  </div>
+                  <ArrowRight size={18} className="action-arrow" />
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+
         </div>
-      )}
+      </div>
     </div>
   );
 }
