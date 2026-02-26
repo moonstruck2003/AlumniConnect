@@ -17,9 +17,9 @@
 | Roll Number | Name | Email | Role |
 |------------|------|-------|------|
 | 20230104112 | Jaliz Mahamud Mridul | mridul.cse.20230104112@aust.edu | Lead and Backend Developer |
-| 20230104114 | Shahriar Mahir | mahir.20230104114@aust.edu | Backend Developer |
-| 20230104107 | Fahim Imam | fahim.20230104107@aust.edu | Frontend and Backend Developer |
-| 20230104109 | Partha Pratim Bishwash | partha.20230104109@aust.edu | Frontend Developer |
+| 20230104114 | Shahriar Mahir | mahir.cse.20230104114@aust.edu | Backend Developer |
+| 20230104107 | Fahim Imam | fahim.cse.20230104107@aust.edu | Frontend and Backend Developer |
+| 20230104109 | Partha Pratim Bishwash | partha.cse.20230104109@aust.edu | Frontend Developer |
 
 ---
 
