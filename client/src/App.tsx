@@ -3,6 +3,7 @@ import BaseLayout from './views/BaseLayout';
 import Home from './views/Home';
 import Login from './views/Login';
 import Signup from './views/Signup';
+import AlumniDirectory from './views/AlumniDirectory';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import { Toaster } from 'react-hot-toast';
@@ -13,6 +14,7 @@ function App() {
     <>
       <Routes>
         <Route path={'/'} element={<Home />} />
+        <Route path={'/alumni'} element={<AlumniDirectory />} />
         <Route path={'/login'} element={<Login />} />
         <Route path={'/signup'} element={<Signup />} />
         <Route
@@ -22,7 +24,7 @@ function App() {
             </BaseLayout>
           }
         >
-          {/* <Route path={'/home'} element={<Home />} /> removed since Home is now default */}
+          {}
           <Route path={'/sessions'} element={<Sessions />} />
         </Route>
       </Routes>
