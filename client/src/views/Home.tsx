@@ -1,14 +1,12 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Users, TrendingUp, Briefcase, Calendar,
-  BookOpen, ArrowRight, LayoutDashboard, Menu, X
+  ArrowRight
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 import './Home.css';
 
 export default function Home() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const stats = [
     { icon: <Users size={24} />, color: 'purple', label: 'Total Alumni', value: '12,450', trend: '+5.2%' },
@@ -36,43 +34,7 @@ export default function Home() {
       <div className="home-container">
 
         {/* Navigation Bar */}
-        <motion.nav
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="home-nav"
-        >
-          <div className="nav-brand">
-            <div className="brand-icon">
-              <span style={{ fontWeight: 800 }}>AC</span>
-            </div>
-            <div className="brand-title">
-              <span className="brand-name">AlumniConnect</span>
-              <span className="brand-subtitle">University Network</span>
-            </div>
-          </div>
-
-          <button
-            className="mobile-menu-btn"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-
-          <div className={`nav-menu-wrapper ${isMobileMenuOpen ? 'active' : ''}`}>
-            <div className="nav-links">
-              <a href="#" className="nav-item active"><LayoutDashboard size={18} /> Dashboard</a>
-              <a href="#" className="nav-item"><Users size={18} /> Alumni Directory</a>
-              <a href="#" className="nav-item"><BookOpen size={18} /> Mentorship</a>
-              <a href="#" className="nav-item"><Briefcase size={18} /> Jobs & Internships</a>
-              <a href="#" className="nav-item"><Calendar size={18} /> Events</a>
-            </div>
-
-            <div className="nav-auth">
-              <Link to="/login" className="btn-login">Login</Link>
-              <Link to="/signup" className="btn-signup">Sign up</Link>
-            </div>
-          </div>
-        </motion.nav>
+        <Navbar activeItem="Dashboard" />
 
         {/* Hero Section */}
         <motion.div
