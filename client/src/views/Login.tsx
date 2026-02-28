@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Lock, ArrowRight, BookOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { secrets } from '../secrets';
 import './Login.css';
+
+const API_BASE = secrets.backendEndpoint || 'http://localhost:8000';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -11,49 +15,42 @@ export default function Login() {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState<'success' | 'error' | ''>('');
   const navigate = useNavigate();
+  const { isAuthenticated, login: authLogin } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) navigate('/dashboard', { replace: true });
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage('');
     setMessageType('');
     try {
-      // First, get the CSRF cookie required by Laravel Sanctum
-      await fetch('http://localhost:8000/sanctum/csrf-cookie', {
-        credentials: 'include',
-      });
-
-      const response = await fetch('http://localhost:8000/api/login', {
+      const response = await fetch(`${API_BASE}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify({ email, password }),
-        credentials: 'include',
       });
 
-      if (response.ok) {
-        const result = await response.json();
+      const result = await response.json().catch(() => ({}));
+
+      if (response.ok && result.token && result.user) {
         setMessage(result.message || 'Login successful!');
         setMessageType('success');
-        localStorage.setItem('isAuthenticated', 'true');
-        navigate('/dashboard'); // Redirect to dashboard
+        authLogin(result.token, result.user);
+        navigate('/dashboard', { replace: true });
       } else {
-        let result: any = {};
-        try {
-          result = await response.json();
-        } catch (jsonError) {
-          // If not JSON, fallback to generic error
-        }
-        // Laravel returns 422 for validation, 401 for unauthorized, 429 for rate limit
-        let errorMsg =
+        const errorMsg =
           (result && result.message) ||
-          (result && result.errors && Object.values(result.errors).join(' ')) ||
+          (result && result.errors && Object.values(result.errors).flat().join(' ')) ||
           'Invalid credentials';
         setMessage('Login failed: ' + errorMsg);
         setMessageType('error');
       }
-    } catch (error) {
+    } catch {
       setMessage('Could not connect to the server. Is Laravel running?');
       setMessageType('error');
     }

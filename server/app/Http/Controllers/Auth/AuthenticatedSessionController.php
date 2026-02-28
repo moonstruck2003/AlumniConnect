@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\JwtService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -10,11 +11,7 @@ use Illuminate\Support\Facades\Validator;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Handle an incoming authentication request for the SPA.
-     *
-     * This explicitly validates the incoming email/password and returns
-     * clear JSON responses instead of a bare 204 so the frontend can
-     * distinguish success vs failure reliably.
+     * Handle login: validate credentials and return JWT token + user.
      */
     public function store(Request $request)
     {
@@ -32,34 +29,29 @@ class AuthenticatedSessionController extends Controller
 
         $credentials = $validator->validated();
 
-        if (! Auth::attempt($credentials)) {
+        if (! Auth::guard('web')->attempt($credentials)) {
             return response()->json([
                 'message' => 'Invalid credentials',
             ], 401);
         }
 
-        $request->session()->regenerate();
+        $user = Auth::user();
+        $token = JwtService::issue($user);
 
         return response()->json([
             'message' => 'Login successful',
-            'user' => Auth::user(),
-        ]);
+            'token' => $token,
+            'user' => $user,
+            'token_type' => 'bearer',
+            'expires_in' => config('jwt.ttl', 60) * 60,
+        ], 200);
     }
 
     /**
-     * Destroy an authenticated session.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Logout: client should discard token; API just confirms.
      */
     public function destroy(Request $request)
     {
-        Auth::guard('web')->logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
-        return response()->noContent();
+        return response()->json(['message' => 'Logged out successfully'], 200);
     }
 }

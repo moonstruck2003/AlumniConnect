@@ -2,16 +2,40 @@ import axios, { AxiosInstance } from 'axios';
 import { secrets } from './secrets';
 import toast from 'react-hot-toast';
 
+const getToken = () => localStorage.getItem('jwt_token');
+
 class ApiClient {
   private client: AxiosInstance;
 
   constructor() {
+    const baseURL = secrets.backendEndpoint || 'http://localhost:8000';
     this.client = axios.create({
-      baseURL: secrets.backendEndpoint,
+      baseURL,
       headers: {
         'Content-Type': 'application/json',
+        Accept: 'application/json',
       },
     });
+
+    this.client.interceptors.request.use((config) => {
+      const token = getToken();
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    });
+
+    this.client.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          localStorage.removeItem('jwt_token');
+          localStorage.removeItem('user');
+          window.location.href = '/login';
+        }
+        return Promise.reject(error);
+      }
+    );
   }
 
   // currently, only fetches 1 session greater than current time
