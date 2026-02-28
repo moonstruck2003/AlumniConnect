@@ -32,23 +32,24 @@ export default function Login() {
         credentials: 'include',
       });
 
-      if (response.ok) {
-        const result = await response.json();
+      const result = await response.json().catch(() => ({}));
+
+      // Success: backend returned 200 and confirmed login (has user or success message)
+      const isSuccess =
+        response.status === 200 &&
+        result &&
+        (result.user || result.message === 'Login successful');
+
+      if (isSuccess) {
         setMessage(result.message || 'Login successful!');
         setMessageType('success');
         localStorage.setItem('isAuthenticated', 'true');
         navigate('/dashboard'); // Redirect to dashboard
       } else {
-        let result: any = {};
-        try {
-          result = await response.json();
-        } catch (jsonError) {
-          // If not JSON, fallback to generic error
-        }
-        // Laravel returns 422 for validation, 401 for unauthorized, 429 for rate limit
-        let errorMsg =
+        // Laravel returns 422 for validation, 401 for unauthorized
+        const errorMsg =
           (result && result.message) ||
-          (result && result.errors && Object.values(result.errors).join(' ')) ||
+          (result && result.errors && Object.values(result.errors).flat().join(' ')) ||
           'Invalid credentials';
         setMessage('Login failed: ' + errorMsg);
         setMessageType('error');
