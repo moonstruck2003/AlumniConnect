@@ -1,6 +1,7 @@
 import { Outlet, Route, Routes } from 'react-router';
 import BaseLayout from './views/BaseLayout';
 import Home from './views/Home';
+import Dashboard from './views/Dashboard';
 import Login from './views/Login';
 import Signup from './views/Signup';
 import AlumniDirectory from './views/AlumniDirectory';
@@ -14,11 +15,14 @@ function App() {
   return (
     <>
       <Routes>
+        {/* Landing Page Route */}
         <Route path={'/'} element={<Home />} />
-        <Route path={'/alumni'} element={<AlumniDirectory />} />
-        <Route path={'/about'} element={<About />} />
+
+        {/* Other Routes */}
         <Route path={'/login'} element={<Login />} />
         <Route path={'/signup'} element={<Signup />} />
+
+        {/* Dashboard Routes with Layout */}
         <Route
           element={
             <BaseLayout>
@@ -26,7 +30,9 @@ function App() {
             </BaseLayout>
           }
         >
-          {}
+          <Route path={'/dashboard'} element={<Dashboard />} />
+          <Route path={'/alumni'} element={<AlumniDirectory />} />
+          <Route path={'/about'} element={<About />} />
           <Route path={'/sessions'} element={<Sessions />} />
         </Route>
       </Routes>
