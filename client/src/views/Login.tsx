@@ -145,7 +145,7 @@ export default function Login() {
               <div className="input-group">
                 <div className="input-header">
                   <label className="input-label">Password</label>
-                  <a href="#" className="forgot-password">
+                  <a href="/forgot-password" className="forgot-password">
                     Forgot password?
                   </a>
                 </div>

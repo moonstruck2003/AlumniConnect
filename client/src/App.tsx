@@ -4,6 +4,7 @@ import Home from './views/Home';
 import Dashboard from './views/Dashboard';
 import Login from './views/Login';
 import Signup from './views/Signup';
+import ForgotPassword from './views/ForgotPassword';
 import AlumniDirectory from './views/AlumniDirectory';
 import About from './About.tsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -17,23 +18,24 @@ function App() {
   return (
     <>
       <Routes>
-       
+
         <Route path={'/'} element={<Home />} />
 
-        
+
         <Route path={'/login'} element={<Login />} />
         <Route path={'/signup'} element={<Signup />} />
+        <Route path={'/forgot-password'} element={<ForgotPassword />} />
 
-       
-<Route element={ <BaseLayout><Outlet /></BaseLayout> }>
-  <Route path={'/dashboard'} element={<Dashboard />} />
-  <Route path={'/alumni'} element={<AlumniDirectory />} />
-  <Route path={'/events'} element={<Events />} />  
-  <Route path={'/about'} element={<About />} />
-  <Route path={'/sessions'} element={<Sessions />} />
-  <Route path={'/mentorship'} element={<Mentorship />} />
-  <Route path={'/jobs'} element={<Jobs />} />
-</Route>
+
+        <Route element={<BaseLayout><Outlet /></BaseLayout>}>
+          <Route path={'/dashboard'} element={<Dashboard />} />
+          <Route path={'/alumni'} element={<AlumniDirectory />} />
+          <Route path={'/events'} element={<Events />} />
+          <Route path={'/about'} element={<About />} />
+          <Route path={'/sessions'} element={<Sessions />} />
+          <Route path={'/mentorship'} element={<Mentorship />} />
+          <Route path={'/jobs'} element={<Jobs />} />
+        </Route>
       </Routes>
       <Toaster
         position="top-center"
