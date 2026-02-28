@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
     Users, Briefcase, Calendar,
-    BookOpen, LayoutDashboard, Menu, X, Info
+    BookOpen, LayoutDashboard, Menu, X, Info, LogOut
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 
 interface NavbarProps {
@@ -13,12 +14,13 @@ interface NavbarProps {
 
 export default function Navbar({ activeItem = 'Dashboard' }: NavbarProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const { isAuthenticated, logout } = useAuth();
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        const authFlag = localStorage.getItem('isAuthenticated');
-        setIsAuthenticated(authFlag === 'true');
-    }, []);
+    const handleLogout = () => {
+        logout();
+        navigate('/login', { replace: true });
+    };
 
     return (
         <motion.nav
@@ -48,12 +50,18 @@ export default function Navbar({ activeItem = 'Dashboard' }: NavbarProps) {
                     <Link to="/dashboard" className={`nav-item ${activeItem === 'Dashboard' ? 'active' : ''}`}><LayoutDashboard size={18} /> Dashboard</Link>
                     <Link to="/alumni" className={`nav-item ${activeItem === 'Alumni Directory' ? 'active' : ''}`}><Users size={18} /> Alumni Directory</Link>
                     <Link to="/mentorship" className={`nav-item ${activeItem === 'Mentorship' ? 'active' : ''}`}><BookOpen size={18} /> Mentorship</Link>
-                   <Link to="/jobs" className={`nav-item ${activeItem === 'Jobs & Internships' ? 'active' : ''}`}><Briefcase size={18} /> Jobs & Internships</Link>
+                    <Link to="/jobs" className={`nav-item ${activeItem === 'Jobs & Internships' ? 'active' : ''}`}><Briefcase size={18} /> Jobs & Internships</Link>
                     <Link to="/events" className={`nav-item ${activeItem === 'Events' ? 'active' : ''}`}><Calendar size={18} /> Events</Link>
                     <Link to="/about" className={`nav-item ${activeItem === 'About Us' ? 'active' : ''}`}><Info size={18} /> About Us</Link>
                 </div>
 
-                {!isAuthenticated && (
+                {isAuthenticated ? (
+                    <div className="nav-auth">
+                        <button type="button" onClick={handleLogout} className="btn-logout">
+                            <LogOut size={18} /> Logout
+                        </button>
+                    </div>
+                ) : (
                     <div className="nav-auth">
                         <Link to="/login" className="btn-login">Login</Link>
                         <Link to="/signup" className="btn-signup">Sign up</Link>

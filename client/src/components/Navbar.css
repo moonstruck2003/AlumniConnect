@@ -117,6 +117,25 @@
     transform: translateY(-1px);
 }
 
+.btn-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    color: #6b7280;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.btn-logout:hover {
+    color: #dc2626;
+}
+
 .mobile-menu-btn {
     display: block;
     background: none;
