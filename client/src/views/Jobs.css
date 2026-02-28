@@ -1,0 +1,31 @@
+.jobs-page-container {
+  padding: 2rem;
+  color: #ffffff;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header { margin-bottom: 2rem; }
+.page-title { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+.page-subtitle { color: #9ca3af; font-size: 1rem; }
+.search-filter-container { display: flex; gap: 1rem; background-color: #1a202c; padding: 0.75rem 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; align-items: center; }
+.search-box { display: flex; align-items: center; flex: 1; gap: 0.75rem; }
+.search-icon { color: #6b7280; }
+.search-box input { background: transparent; border: none; color: white; width: 100%; font-size: 1rem; outline: none; }
+.filter-btn { display: flex; align-items: center; gap: 0.5rem; background-color: transparent; border: 1px solid #4b5563; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; cursor: pointer; transition: background 0.2s; }
+.filter-btn:hover { background-color: #374151; }
+.results-text { color: #9ca3af; font-size: 0.875rem; margin-bottom: 1rem; }
+
+/* Jobs  */
+.jobs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+.job-card { background-color: #1a202c; border-radius: 0.75rem; padding: 1.5rem; display: flex; flex-direction: column; }
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+.job-icon-wrapper { background-color: rgba(16, 185, 129, 0.1); padding: 0.75rem; border-radius: 0.5rem; }
+.job-badge { background-color: #374151; color: #e5e7eb; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+.job-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.25rem; }
+.job-company { color: #9ca3af; font-size: 1rem; font-weight: 500; margin-bottom: 1.5rem; }
+.job-details { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; flex-grow: 1; }
+.detail-row { display: flex; align-items: center; gap: 0.5rem; color: #d1d5db; font-size: 0.875rem; }
+.detail-icon { color: #10b981; }
+.apply-btn { width: 100%; background-color: transparent; color: #10b981; border: 2px solid #10b981; padding: 0.75rem; border-radius: 0.5rem; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-top: auto; }
+.apply-btn:hover { background-color: #10b981; color: white; }
