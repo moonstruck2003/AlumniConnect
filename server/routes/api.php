@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
 /*
@@ -16,6 +17,8 @@ use App\Http\Controllers\Api\UserController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
