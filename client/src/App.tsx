@@ -4,6 +4,7 @@ import Home from './views/Home';
 import Dashboard from './views/Dashboard';
 import Login from './views/Login';
 import Signup from './views/Signup';
+import ForgotPassword from './views/ForgotPassword';
 import AlumniDirectory from './views/AlumniDirectory';
 import About from './About.tsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
