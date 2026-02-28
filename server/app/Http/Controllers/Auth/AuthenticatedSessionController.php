@@ -32,18 +32,22 @@ class AuthenticatedSessionController extends Controller
 
         $credentials = $validator->validated();
 
-        if (! Auth::attempt($credentials)) {
+        // Authenticate against the database (users table, bcrypt password check)
+        if (! Auth::guard('web')->attempt($credentials)) {
             return response()->json([
                 'message' => 'Invalid credentials',
             ], 401);
         }
 
-        $request->session()->regenerate();
+        $user = Auth::user();
+        if ($request->hasSession()) {
+            $request->session()->regenerate();
+        }
 
         return response()->json([
             'message' => 'Login successful',
-            'user' => Auth::user(),
-        ]);
+            'user' => $user,
+        ], 200);
     }
 
     /**
