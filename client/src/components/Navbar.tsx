@@ -45,7 +45,7 @@ export default function Navbar({ activeItem = 'Dashboard' }: NavbarProps) {
 
             <div className={`nav-menu-wrapper ${isMobileMenuOpen ? 'active' : ''}`}>
                 <div className="nav-links">
-                    <Link to="/" className={`nav-item ${activeItem === 'Dashboard' ? 'active' : ''}`}><LayoutDashboard size={18} /> Dashboard</Link>
+                    <Link to="/dashboard" className={`nav-item ${activeItem === 'Dashboard' ? 'active' : ''}`}><LayoutDashboard size={18} /> Dashboard</Link>
                     <Link to="/alumni" className={`nav-item ${activeItem === 'Alumni Directory' ? 'active' : ''}`}><Users size={18} /> Alumni Directory</Link>
                     <a href="#" className={`nav-item ${activeItem === 'Mentorship' ? 'active' : ''}`}><BookOpen size={18} /> Mentorship</a>
                     <a href="#" className={`nav-item ${activeItem === 'Jobs & Internships' ? 'active' : ''}`}><Briefcase size={18} /> Jobs & Internships</a>
