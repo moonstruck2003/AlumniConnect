@@ -20,6 +20,10 @@ class User extends Authenticatable
         'job_title',
         'company',
         'role',
+        'student_id',
+        'department',
+        'cgpa',
+        'recruiter_company',
     ];
 
     protected $hidden = [

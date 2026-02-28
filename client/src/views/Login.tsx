@@ -44,7 +44,7 @@ export default function Login() {
         setMessage(result.message || 'Login successful!');
         setMessageType('success');
         localStorage.setItem('isAuthenticated', 'true');
-        navigate('/dashboard');
+        navigate('/dashboard'); // Redirect to dashboard
       } else {
         // Laravel returns 422 for validation, 401 for unauthorized
         const errorMsg =
@@ -109,9 +109,8 @@ export default function Login() {
             {/* Show login message in form */}
             {message && (
               <div
-                className={`alert ${
-                  messageType === 'success' ? 'alert-success' : 'alert-danger'
-                }`}
+                className={`alert ${messageType === 'success' ? 'alert-success' : 'alert-danger'
+                  }`}
                 style={{
                   marginBottom: '1rem',
                   padding: '0.75rem',

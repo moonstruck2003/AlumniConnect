@@ -1,7 +1,8 @@
 .alumni-page {
     min-height: 100vh;
-    background-color: #f8fafc;
-    font-family: 'Josefin Sans', sans-serif;
+    background-color: var(--bg-dark);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--text-main);
 }
 
 .alumni-container {
@@ -17,21 +18,23 @@
 .page-title {
     font-size: 2rem;
     font-weight: 800;
-    color: #111827;
+    color: var(--text-main);
     margin-bottom: 0.5rem;
 }
 
 .page-subtitle {
     font-size: 1rem;
-    color: #6b7280;
+    color: var(--text-muted);
     margin: 0;
 }
 
 .filters-card {
-    background: white;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(16px);
     border-radius: 1rem;
     padding: 1.25rem;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     margin-bottom: 1.5rem;
     display: flex;
     flex-direction: column;
@@ -41,21 +44,21 @@
 .search-bar-wrapper {
     display: flex;
     align-items: center;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--card-border);
     border-radius: 0.75rem;
     padding: 0.5rem 1rem;
-    background-color: #f9fafb;
+    background-color: rgba(255, 255, 255, 0.05);
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .search-bar-wrapper:focus-within {
-    border-color: #7c3aed;
-    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
-    background-color: white;
+    border-color: var(--accent-emerald);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .search-icon {
-    color: #9ca3af;
+    color: var(--text-muted);
     margin-right: 0.75rem;
 }
 
@@ -64,22 +67,22 @@
     border: none;
     background: transparent;
     font-size: 0.95rem;
-    color: #111827;
+    color: var(--text-main);
     outline: none;
     font-family: inherit;
 }
 
 .search-input::placeholder {
-    color: #9ca3af;
+    color: var(--text-muted);
 }
 
 .btn-filter-toggle {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    background: white;
-    border: 1px solid #d1d5db;
-    color: #374151;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--card-border);
+    color: var(--text-main);
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     font-size: 0.875rem;
@@ -90,13 +93,13 @@
 }
 
 .btn-filter-toggle:hover {
-    background-color: #f3f4f6;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .btn-filter-toggle.active {
-    background-color: #f3e8ff;
-    border-color: #7c3aed;
-    color: #7c3aed;
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: var(--accent-emerald);
+    color: var(--accent-emerald);
 }
 
 .filter-options {
@@ -105,20 +108,20 @@
     gap: 1rem;
     align-items: center;
     padding-top: 1rem;
-    border-top: 1px solid #f3f4f6;
+    border-top: 1px solid var(--card-border);
 }
 
 .industry-select {
     padding: 0.5rem 2rem 0.5rem 1rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--card-border);
     border-radius: 0.5rem;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.05);
     font-size: 0.875rem;
-    color: #374151;
+    color: var(--text-main);
     cursor: pointer;
     outline: none;
     appearance: none;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
     background-position: right 0.5rem center;
     background-repeat: no-repeat;
     background-size: 1.5em 1.5em;
@@ -126,8 +129,13 @@
 }
 
 .industry-select:focus {
-    border-color: #7c3aed;
-    box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
+    border-color: var(--accent-emerald);
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.industry-select option {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
 }
 
 .mentor-checkbox-wrapper {
@@ -136,35 +144,35 @@
     gap: 0.5rem;
     cursor: pointer;
     font-size: 0.875rem;
-    color: #374151;
+    color: var(--text-muted);
     user-select: none;
     padding: 0.5rem 1rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--card-border);
     border-radius: 0.5rem;
     transition: all 0.2s;
 }
 
 .mentor-checkbox-wrapper:hover {
-    background-color: #f9fafb;
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 .mentor-checkbox-wrapper input[type="checkbox"] {
     cursor: pointer;
     width: 1rem;
     height: 1rem;
-    accent-color: #7c3aed;
+    accent-color: var(--accent-emerald);
 }
 
 .mentor-checkbox-wrapper:has(input:checked) {
-    border-color: #7c3aed;
-    background-color: #faf5ff;
-    color: #7c3aed;
+    border-color: var(--accent-emerald);
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--accent-emerald);
     font-weight: 500;
 }
 
 .results-info {
     font-size: 0.875rem;
-    color: #6b7280;
+    color: var(--text-muted);
     margin-bottom: 1rem;
 }
 
@@ -187,20 +195,21 @@
 }
 
 .alumni-card {
-    background: white;
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
     border-radius: 1rem;
     padding: 1.5rem;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s, box-shadow 0.2s;
-    border: 1px solid transparent;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    border: 1px solid var(--card-border);
 }
 
 .alumni-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-    border-color: #f3e8ff;
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.5);
 }
 
 .card-header {
@@ -213,8 +222,8 @@
 .avatar-initials {
     width: 3.5rem;
     height: 3.5rem;
-    background-color: #f3e8ff;
-    color: #7c3aed;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.8));
+    color: #ffffff;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -222,11 +231,13 @@
     font-weight: 700;
     font-size: 1.25rem;
     letter-spacing: 1px;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
 }
 
 .mentor-badge {
-    background-color: #dcfce7;
-    color: #16a34a;
+    background-color: rgba(16, 185, 129, 0.2);
+    color: var(--accent-emerald);
+    border: 1px solid rgba(16, 185, 129, 0.3);
     padding: 0.25rem 0.75rem;
     border-radius: 1rem;
     font-size: 0.75rem;
@@ -237,13 +248,13 @@
 .alumni-name {
     font-size: 1.25rem;
     font-weight: 700;
-    color: #111827;
+    color: var(--text-main);
     margin: 0 0 0.25rem 0;
 }
 
 .alumni-role {
     font-size: 0.95rem;
-    color: #4b5563;
+    color: var(--text-muted);
     margin: 0 0 1.25rem 0;
 }
 
@@ -259,18 +270,18 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    color: #6b7280;
+    color: var(--text-muted);
     font-size: 0.875rem;
 }
 
 .detail-item svg {
-    color: #9ca3af;
+    color: var(--accent-emerald);
     flex-shrink: 0;
 }
 
 .btn-view-profile {
     width: 100%;
-    background-color: #7c3aed;
+    background: linear-gradient(135deg, var(--accent-emerald) 0%, #059669 100%);
     color: white;
     border: none;
     padding: 0.75rem;
@@ -278,12 +289,13 @@
     font-weight: 600;
     font-size: 0.95rem;
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.1s;
+    transition: all 0.2s;
     font-family: inherit;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
 }
 
 .btn-view-profile:hover {
-    background-color: #6d28d9;
+    background: linear-gradient(135deg, #059669 0%, var(--accent-emerald) 100%);
 }
 
 .btn-view-profile:active {

@@ -1,10 +1,23 @@
 :root {
-  font-family: 'Josefin Sans', serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+
+  /* Lavish Theme Colors */
+  --bg-dark: #0b0f19;
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;
+  --accent-emerald: #10b981;
+  --accent-blue: #3b82f6;
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --card-border: rgba(255, 255, 255, 0.05);
 }
+
 body {
-  font-family: 'Josefin Sans', serif;
+  margin: 0;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .layout {
@@ -21,9 +34,11 @@ main {
   flex: 1;
   padding: 1em;
 }
+
 footer {
   padding: 1em;
   text-align: center;
+  color: var(--text-muted);
 }
 
 @media (min-width: 576px) {
@@ -37,4 +52,42 @@ footer {
     padding-left: 300px;
     padding-right: 300px;
   }
+}
+
+/* Base overrides for Bootstrap */
+.form-control,
+.form-control:focus {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--card-border);
+  color: var(--text-main);
+}
+
+.form-control::placeholder {
+  color: var(--text-muted);
+}
+
+.card {
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--card-border) !important;
+  color: var(--text-main) !important;
+  backdrop-filter: blur(16px);
+}
+
+.text-body-secondary {
+  color: var(--text-muted) !important;
+}
+
+.navbar.bg-body-tertiary {
+  background-color: rgba(11, 15, 25, 0.8) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--card-border);
+}
+
+.navbar-brand,
+.nav-link {
+  color: var(--text-main) !important;
+}
+
+.nav-link:hover {
+  color: var(--accent-emerald) !important;
 }

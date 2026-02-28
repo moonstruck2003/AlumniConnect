@@ -26,11 +26,16 @@ class UserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password), 
+            'password' => Hash::make($request->password),
             'linkedin_url' => $request->linkedin_url,
             'short_bio' => $request->short_bio,
             'job_title' => $request->job_title,
             'company' => $request->company,
+            'role' => $request->role ?? 'user',
+            'student_id' => $request->student_id,
+            'department' => $request->department,
+            'cgpa' => $request->cgpa === '' ? null : $request->cgpa,
+            'recruiter_company' => $request->recruiter_company,
         ]);
 
         return response()->json([
