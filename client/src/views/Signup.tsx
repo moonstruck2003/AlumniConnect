@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Lock, ArrowRight, BookOpen, User, Briefcase, GraduationCap, Building2, BadgeInfo, FileText } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import './Signup.css';
 
 type Role = 'alumni' | 'student' | 'recruiter';
 
 export default function Signup() {
+    const navigate = useNavigate();
     const [role, setRole] = useState<Role>('alumni');
     const [isHovered, setIsHovered] = useState(false);
 
@@ -31,51 +33,49 @@ export default function Signup() {
     // Recruiters Table
     const [recruiterCompanyName, setRecruiterCompanyName] = useState('');
 
-const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
 
-    // Consolidate data into a single object for the backend
-    const payload = {
-        name: `${firstName} ${lastName}`, // Laravel 'users' table usually has 'name'
-        email,
-        password,
-        role,
-        linkedin_url: linkedinUrl,
-        short_bio: bio,
-        // Role specific fields
-        student_id: studentId,
-        department,
-        cgpa,
-        job_title: alumniJobTitle,
-        company: alumniCompany,
-        recruiter_company: recruiterCompanyName
-    };
+        // Consolidate data into a single object for the backend
+        const payload = {
+            name: `${firstName} ${lastName}`, // Laravel 'users' table usually has 'name'
+            email,
+            password,
+            role,
+            linkedin_url: linkedinUrl,
+            short_bio: bio,
+            // Role specific fields
+            student_id: studentId,
+            department,
+            cgpa,
+            job_title: alumniJobTitle,
+            company: alumniCompany,
+            recruiter_company: recruiterCompanyName
+        };
 
-    try {
-        const response = await fetch('http://localhost:8000/api/users', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify(payload),
-        });
+        try {
+            const response = await fetch('http://localhost:8000/api/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
 
-        const result = await response.json();
+            const result = await response.json();
 
-        if (response.ok) {
-            alert('Signup successful! You can now check phpMyAdmin.');
-            // Optional: redirect to login
-            // window.location.href = '/login';
-        } else {
-            // Handle validation errors (e.g., email already taken)
-            alert('Error: ' + JSON.stringify(result.errors));
+            if (response.ok) {
+                navigate('/dashboard');
+            } else {
+                // Handle validation errors (e.g., email already taken)
+                alert('Error: ' + JSON.stringify(result.errors));
+            }
+        } catch (error) {
+            console.error('Connection error:', error);
+            alert('Could not connect to the server. Is Laravel running?');
         }
-    } catch (error) {
-        console.error('Connection error:', error);
-        alert('Could not connect to the server. Is Laravel running?');
-    }
-};
+    };
 
     return (
         <div className="signup-page">
