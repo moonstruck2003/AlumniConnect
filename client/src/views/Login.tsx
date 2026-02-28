@@ -7,58 +7,69 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isHovered, setIsHovered] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState<'success' | 'error' | ''>('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Login logic would be here
-    console.log('Login submitted:', { email, password });
+    setMessage('');
+    setMessageType('');
+    try {
+      // First, get the CSRF cookie required by Laravel Sanctum
+      await fetch('http://localhost:8000/sanctum/csrf-cookie', {
+        credentials: 'include',
+      });
+
+      const response = await fetch('http://localhost:8000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setMessage('Login successful!');
+        setMessageType('success');
+        // window.location.href = '/dashboard'; // Optional redirect
+      } else {
+        let result: any = {};
+        try {
+          result = await response.json();
+        } catch (jsonError) {
+          // If not JSON, fallback to generic error
+        }
+        // Laravel returns 422 for validation, 401 for unauthorized, 429 for rate limit
+        let errorMsg =
+          (result && result.message) ||
+          (result && result.errors && Object.values(result.errors).join(' ')) ||
+          'Invalid credentials';
+        setMessage('Login failed: ' + errorMsg);
+        setMessageType('error');
+      }
+    } catch (error) {
+      setMessage('Could not connect to the server. Is Laravel running?');
+      setMessageType('error');
+    }
   };
 
   return (
     <div className="login-page">
-      
       {/* Main Container */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
         className="login-container"
       >
-        
         {/* Left Side - Visual/Branding */}
         <div className="login-left">
-          {/* Abstract floating shapes */}
-          <motion.div 
-            animate={{ 
-              y: [0, -20, 0],
-              rotate: [0, 5, -5, 0]
-            }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            className="shape-1"
-          />
-          <motion.div 
-            animate={{ 
-              y: [0, 30, 0],
-              rotate: [0, -10, 5, 0]
-            }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-            className="shape-2"
-          />
-
-          <div className="brand-container">
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}
-            >
-              <div className="brand-icon">
-                <BookOpen size={24} />
-              </div>
-              <span className="brand-text">AlumniConnect</span>
-            </motion.div>
+          <div className="hero-icon">
+            <BookOpen size={40} />
           </div>
-
           <div className="hero-text-container">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -69,7 +80,8 @@ export default function Login() {
                 Inspire the Next <br /> Generation
               </h2>
               <p className="hero-subtitle">
-                Connect with mentors, find exclusive opportunities, and give back to your alma mater community.
+                Connect with mentors, find exclusive opportunities, and give back to your alma
+                mater community.
               </p>
             </motion.div>
           </div>
@@ -85,8 +97,27 @@ export default function Login() {
           >
             <div className="form-header">
               <h3 className="form-title">Welcome Back</h3>
-              <p className="form-subtitle">Please enter your credentials to access your account.</p>
+              <p className="form-subtitle">
+                Please enter your credentials to access your account.
+              </p>
             </div>
+
+            {/* Show login message in form */}
+            {message && (
+              <div
+                className={`alert ${
+                  messageType === 'success' ? 'alert-success' : 'alert-danger'
+                }`}
+                style={{
+                  marginBottom: '1rem',
+                  padding: '0.75rem',
+                  borderRadius: '6px',
+                  fontSize: '1rem',
+                }}
+              >
+                {message}
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="login-form">
               {/* Email Input */}
@@ -96,8 +127,8 @@ export default function Login() {
                   <div className="input-icon">
                     <Mail size={20} />
                   </div>
-                  <input 
-                    type="email" 
+                  <input
+                    type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="form-input"
@@ -119,8 +150,8 @@ export default function Login() {
                   <div className="input-icon">
                     <Lock size={20} />
                   </div>
-                  <input 
-                    type="password" 
+                  <input
+                    type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="form-input"
@@ -158,11 +189,9 @@ export default function Login() {
                 </a>
               </p>
             </div>
-
           </motion.div>
         </div>
       </motion.div>
-
     </div>
   );
 }
