@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
@@ -13,6 +13,12 @@ interface NavbarProps {
 
 export default function Navbar({ activeItem = 'Dashboard' }: NavbarProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const authFlag = localStorage.getItem('isAuthenticated');
+        setIsAuthenticated(authFlag === 'true');
+    }, []);
 
     return (
         <motion.nav
@@ -47,10 +53,12 @@ export default function Navbar({ activeItem = 'Dashboard' }: NavbarProps) {
                     <Link to="/about" className={`nav-item ${activeItem === 'About Us' ? 'active' : ''}`}><Info size={18} /> About Us</Link>
                 </div>
 
-                <div className="nav-auth">
-                    <Link to="/login" className="btn-login">Login</Link>
-                    <Link to="/signup" className="btn-signup">Sign up</Link>
-                </div>
+                {!isAuthenticated && (
+                    <div className="nav-auth">
+                        <Link to="/login" className="btn-login">Login</Link>
+                        <Link to="/signup" className="btn-signup">Sign up</Link>
+                    </div>
+                )}
             </div>
         </motion.nav>
     );

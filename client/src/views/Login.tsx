@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Lock, ArrowRight, BookOpen } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
 export default function Login() {
@@ -9,6 +10,7 @@ export default function Login() {
   const [isHovered, setIsHovered] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState<'success' | 'error' | ''>('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,9 +34,10 @@ export default function Login() {
 
       if (response.ok) {
         const result = await response.json();
-        setMessage('Login successful!');
+        setMessage(result.message || 'Login successful!');
         setMessageType('success');
-        // window.location.href = '/dashboard'; // Optional redirect
+        localStorage.setItem('isAuthenticated', 'true');
+        navigate('/'); // Redirect to dashboard / home
       } else {
         let result: any = {};
         try {
