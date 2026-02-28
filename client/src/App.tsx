@@ -10,31 +10,30 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import { Toaster } from 'react-hot-toast';
 import Sessions from './views/Sessions';
-
+import Events from './views/Events';
+import Mentorship from './views/Mentorship';
+import Jobs from './views/Jobs';
 function App() {
   return (
     <>
       <Routes>
-        {/* Landing Page Route */}
+       
         <Route path={'/'} element={<Home />} />
 
-        {/* Other Routes */}
+        
         <Route path={'/login'} element={<Login />} />
         <Route path={'/signup'} element={<Signup />} />
 
-        {/* Dashboard Routes with Layout */}
-        <Route
-          element={
-            <BaseLayout>
-              <Outlet />
-            </BaseLayout>
-          }
-        >
-          <Route path={'/dashboard'} element={<Dashboard />} />
-          <Route path={'/alumni'} element={<AlumniDirectory />} />
-          <Route path={'/about'} element={<About />} />
-          <Route path={'/sessions'} element={<Sessions />} />
-        </Route>
+       
+<Route element={ <BaseLayout><Outlet /></BaseLayout> }>
+  <Route path={'/dashboard'} element={<Dashboard />} />
+  <Route path={'/alumni'} element={<AlumniDirectory />} />
+  <Route path={'/events'} element={<Events />} />  
+  <Route path={'/about'} element={<About />} />
+  <Route path={'/sessions'} element={<Sessions />} />
+  <Route path={'/mentorship'} element={<Mentorship />} />
+  <Route path={'/jobs'} element={<Jobs />} />
+</Route>
       </Routes>
       <Toaster
         position="top-center"
