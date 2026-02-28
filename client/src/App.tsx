@@ -10,7 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import { Toaster } from 'react-hot-toast';
 import Sessions from './views/Sessions';
-
+import Events from './views/Events';
 function App() {
   return (
     <>
@@ -23,18 +23,14 @@ function App() {
         <Route path={'/signup'} element={<Signup />} />
 
         {/* Dashboard Routes with Layout */}
-        <Route
-          element={
-            <BaseLayout>
-              <Outlet />
-            </BaseLayout>
-          }
-        >
-          <Route path={'/dashboard'} element={<Dashboard />} />
-          <Route path={'/alumni'} element={<AlumniDirectory />} />
-          <Route path={'/about'} element={<About />} />
-          <Route path={'/sessions'} element={<Sessions />} />
-        </Route>
+       {/* Dashboard Routes with Layout */}
+<Route element={ <BaseLayout><Outlet /></BaseLayout> }>
+  <Route path={'/dashboard'} element={<Dashboard />} />
+  <Route path={'/alumni'} element={<AlumniDirectory />} />
+  <Route path={'/events'} element={<Events />} />  {/* <-- ADD THIS LINE */}
+  <Route path={'/about'} element={<About />} />
+  <Route path={'/sessions'} element={<Sessions />} />
+</Route>
       </Routes>
       <Toaster
         position="top-center"
