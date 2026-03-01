@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Search, Filter, MapPin, Award } from 'lucide-react';
+import Navbar from '../components/Navbar';
 import './Mentorship.css';
 
 const mentorsData = [
@@ -13,7 +14,7 @@ const mentorsData = [
     available: true,
   },
   {
-    
+
     id: 2,
     name: 'Sarah Jenkins',
     role: 'Product Design Lead',
@@ -38,6 +39,7 @@ export default function Mentorship() {
 
   return (
     <div className="mentorship-page-container">
+      <Navbar activeItem="Mentorship" />
       <div className="page-header">
         <h1 className="page-title">Mentorship Program</h1>
         <p className="page-subtitle">Find a mentor or offer your guidance to fellow alumni</p>
@@ -46,9 +48,9 @@ export default function Mentorship() {
       <div className="search-filter-container">
         <div className="search-box">
           <Search size={20} className="search-icon" />
-          <input 
-            type="text" 
-            placeholder="Search by name, role, company, or skills..." 
+          <input
+            type="text"
+            placeholder="Search by name, role, company, or skills..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -71,10 +73,10 @@ export default function Mentorship() {
                 {mentor.available ? 'Accepting Mentees' : 'At Capacity'}
               </span>
             </div>
-            
+
             <h3 className="mentor-name">{mentor.name}</h3>
             <p className="mentor-role">{mentor.role} @ {mentor.company}</p>
-            
+
             <div className="mentor-details">
               <div className="detail-row">
                 <MapPin size={16} className="detail-icon" />
@@ -90,8 +92,8 @@ export default function Mentorship() {
               </div>
             </div>
 
-            <button 
-              className="action-btn" 
+            <button
+              className="action-btn"
               disabled={!mentor.available}
               style={{ opacity: mentor.available ? 1 : 0.5, cursor: mentor.available ? 'pointer' : 'not-allowed' }}
             >

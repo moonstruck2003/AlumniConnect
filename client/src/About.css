@@ -18,7 +18,7 @@
   padding: 60px 40px;
   text-align: center;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1280px;
   margin-bottom: 40px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
@@ -43,7 +43,7 @@
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 30px;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1280px;
 }
 
 .about-info-card {
@@ -101,7 +101,7 @@
 .about-team-section {
   margin-top: 60px;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1280px;
 
 }
 

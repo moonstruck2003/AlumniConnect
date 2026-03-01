@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Search, Filter, Briefcase, MapPin, DollarSign, Clock } from 'lucide-react';
+import Navbar from '../components/Navbar';
 import './Jobs.css';
 
 const jobsData = [
@@ -37,6 +38,7 @@ export default function Jobs() {
 
   return (
     <div className="jobs-page-container">
+      <Navbar activeItem="Jobs & Internships" />
       <div className="page-header">
         <h1 className="page-title">Jobs & Internships</h1>
         <p className="page-subtitle">Discover career opportunities from our alumni network</p>
@@ -45,9 +47,9 @@ export default function Jobs() {
       <div className="search-filter-container">
         <div className="search-box">
           <Search size={20} className="search-icon" />
-          <input 
-            type="text" 
-            placeholder="Search jobs by title, company, or keywords..." 
+          <input
+            type="text"
+            placeholder="Search jobs by title, company, or keywords..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -68,10 +70,10 @@ export default function Jobs() {
               </div>
               <span className="job-badge">{job.type}</span>
             </div>
-            
+
             <h3 className="job-title">{job.title}</h3>
             <p className="job-company">{job.company}</p>
-            
+
             <div className="job-details">
               <div className="detail-row">
                 <MapPin size={16} className="detail-icon" />

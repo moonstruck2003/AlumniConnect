@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Search, Filter, Calendar, MapPin, Clock } from 'lucide-react';
+import Navbar from '../components/Navbar';
 import './Events.css';
 
 // Dummy data for events
@@ -38,6 +39,7 @@ export default function Events() {
 
   return (
     <div className="events-page-container">
+      <Navbar activeItem="Events" />
       {/* Headers */}
       <div className="page-header">
         <h1 className="page-title">Upcoming Events</h1>
@@ -48,9 +50,9 @@ export default function Events() {
       <div className="search-filter-container">
         <div className="search-box">
           <Search size={20} className="search-icon" />
-          <input 
-            type="text" 
-            placeholder="Search events by name, location, or type..." 
+          <input
+            type="text"
+            placeholder="Search events by name, location, or type..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -72,10 +74,10 @@ export default function Events() {
               </div>
               <span className="event-badge">{event.type}</span>
             </div>
-            
+
             <h3 className="event-title">{event.title}</h3>
             <p className="event-description">{event.description}</p>
-            
+
             <div className="event-details">
               <div className="detail-row">
                 <Calendar size={16} className="detail-icon" />
