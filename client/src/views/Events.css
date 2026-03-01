@@ -1,7 +1,7 @@
 .events-page-container {
   padding: 2rem;
   color: #ffffff;
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
 }
 
@@ -23,7 +23,7 @@
 .search-filter-container {
   display: flex;
   gap: 1rem;
-  background-color: #1a202c; 
+  background-color: #1a202c;
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
   margin-bottom: 1.5rem;
@@ -95,7 +95,7 @@
 }
 
 .event-icon-wrapper {
-  background-color: rgba(16, 185, 129, 0.1); 
+  background-color: rgba(16, 185, 129, 0.1);
   padding: 0.75rem;
   border-radius: 50%;
 }

@@ -20,6 +20,7 @@ function App() {
   return (
     <>
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
@@ -32,7 +33,6 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/alumni" element={<AlumniDirectory />} />
           <Route path="/events" element={<Events />} />

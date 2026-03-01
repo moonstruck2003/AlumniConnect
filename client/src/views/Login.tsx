@@ -183,7 +183,7 @@ export default function Login() {
             <div className="signup-text">
               <p>
                 Don't have an account yet?{' '}
-                <a href="#" className="signup-link">
+                <a href="/signup" className="signup-link">
                   Apply for access
                 </a>
               </p>

@@ -1,13 +1,14 @@
+import Navbar from './components/Navbar';
 import './About.css';
 
 export default function About() {
-  
+
   const teamMembers = [
     {
       name: "Shahriar Mahir",
       id: "20230104114",
       sec: "C1",
-      image: "https://placehold.co/300x400/1e293b/F4A261?text=Mahir" 
+      image: "https://placehold.co/300x400/1e293b/F4A261?text=Mahir"
     },
     {
       name: "MD Fahim Imam",
@@ -31,6 +32,7 @@ export default function About() {
 
   return (
     <div className="about-page-container">
+      <Navbar activeItem="About Us" />
       <div className="about-hero-section">
         <h1>About AlumniConnect</h1>
         <p>Empowering graduates to connect, grow, and succeed together beyond the university campus.</p>
@@ -57,7 +59,7 @@ export default function About() {
         <div className="team-header">
           <h2 className="team-title">Meet The Team</h2>
         </div>
-        
+
         <div className="team-grid">
           {teamMembers.map((member, index) => (
             <div className="team-card" key={index}>
@@ -71,7 +73,7 @@ export default function About() {
           ))}
         </div>
       </div>
-      
+
     </div>
   );
 }
