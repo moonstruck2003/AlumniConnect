@@ -48,6 +48,16 @@ class ApiClient {
     }
   }
 
+  async getProfile() {
+    try {
+      const response = await this.client.get('/api/profile');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
   async createSession(name: string, duration: number, username: string, password: string) {
     try {
       if (!username || !password) {

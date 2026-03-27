@@ -20,9 +20,12 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 
-Route::middleware(['auth:api'])->group(function () {
+Route::middleware([\App\Http\Middleware\AuthenticateJwt::class])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
+    });
+    Route::get('/profile', function (Request $request) {
+        return response()->json(['user' => $request->user()], 200);
     });
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
 });
