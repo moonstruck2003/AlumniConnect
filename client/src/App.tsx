@@ -14,6 +14,7 @@ import Sessions from './views/Sessions';
 import Events from './views/Events';
 import Mentorship from './views/Mentorship';
 import Jobs from './views/Jobs';
+import RecruiterProfile from './views/RecruiterProfile';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
           <Route path="/sessions" element={<Sessions />} />
           <Route path="/mentorship" element={<Mentorship />} />
           <Route path="/jobs" element={<Jobs />} />
+          <Route path="/profile" element={<RecruiterProfile />} />
         </Route>
       </Routes>
       <Toaster
