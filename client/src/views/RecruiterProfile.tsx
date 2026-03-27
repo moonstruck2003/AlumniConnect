@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { User, Building2, Linkedin, FileText, Loader } from 'lucide-react';
+import { User, Building2, Linkedin, FileText, Loader, Briefcase, CheckCircle, XCircle } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import ApiClient from '../api';
 import './RecruiterProfile.css';
@@ -17,6 +17,7 @@ interface ProfileData {
 
 export default function RecruiterProfile() {
   const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [myJobs, setMyJobs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -42,8 +43,33 @@ export default function RecruiterProfile() {
     }
   };
 
+  const fetchMyJobs = async () => {
+    try {
+      const api = new ApiClient();
+      const data = await api.getMyJobs();
+      if (data && data.success) {
+        setMyJobs(data.data);
+      }
+    } catch (err: any) {
+      console.error('Error fetching jobs', err);
+    }
+  };
+
+  const handleToggleJob = async (jobId: number) => {
+    try {
+      const api = new ApiClient();
+      const data = await api.toggleJobStatus(jobId);
+      if (data && data.success) {
+        setMyJobs(myJobs.map(job => job.id === jobId ? { ...job, is_active: data.is_active } : job));
+      }
+    } catch (error) {
+      console.error('Failed to toggle job', error);
+    }
+  };
+
   useEffect(() => {
     fetchProfile();
+    fetchMyJobs();
   }, []);
 
   if (loading) {
@@ -160,6 +186,41 @@ export default function RecruiterProfile() {
             </div>
           </div>
         </div>
+
+        {/* My Job Postings Management - Recruiter Only */}
+        {profile.role === 'recruiter' && (
+          <div className="profile-card">
+            <h3 className="card-title">
+              <Briefcase size={20} /> My Job Posts
+            </h3>
+            {myJobs.length === 0 ? (
+              <p className="empty-jobs-text">You haven't posted any jobs or internships yet.</p>
+            ) : (
+              <div className="managed-jobs-list">
+                {myJobs.map((job) => (
+                  <div key={job.id} className={`managed-job-item ${!job.is_active ? 'inactive' : ''}`}>
+                    <div className="job-info">
+                      <h4>{job.title}</h4>
+                      <span className="job-meta">{job.type} • {new Date(job.created_at).toLocaleDateString()}</span>
+                    </div>
+                    <div className="job-actions">
+                      <button 
+                        className={`status-toggle ${job.is_active ? 'active' : 'inactive'}`} 
+                        onClick={() => handleToggleJob(job.id)}
+                      >
+                        {job.is_active ? (
+                          <><CheckCircle size={16} /> Active</>
+                        ) : (
+                          <><XCircle size={16} /> Hidden</>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
