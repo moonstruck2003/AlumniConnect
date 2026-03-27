@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SessionController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\JobPostingController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -39,9 +38,4 @@ Route::middleware([\App\Http\Middleware\AuthenticateJwt::class])->group(function
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
 });
 
-Route::get('/session', [SessionController::class, 'getSession']);
-Route::post('/session', [SessionController::class, 'createSession'])->middleware('check.admin');
-Route::put('/session', [SessionController::class, 'updateSession'])->middleware('check.admin');
-Route::post('/sessions', [SessionController::class, 'viewSessions'])->middleware('check.admin');
-Route::post('/attendance', [SessionController::class, 'submitAttendance']);
-Route::post('/users', [UserController::class, 'store']);
+Route::post('/users', [UserController::class, 'store']);
