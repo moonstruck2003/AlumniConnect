@@ -36,4 +36,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'is_accepting_mentees' => 'boolean',
     ];
+
+    public function jobPostings()
+    {
+        return $this->hasMany(JobPosting::class);
+    }
+
+    public function mentorshipRequests()
+    {
+        return $this->hasMany(MentorshipRequest::class, 'mentor_id');
+    }
+
+    public function sentMentorshipRequests()
+    {
+        return $this->hasMany(MentorshipRequest::class, 'mentee_id');
+    }
 }
