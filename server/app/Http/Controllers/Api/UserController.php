@@ -52,6 +52,7 @@ class UserController extends Controller
             'name' => 'sometimes|string|max:255',
             'email' => 'sometimes|string|email|unique:users,email,'.$user->id,
             'linkedin_url' => 'nullable|url',
+            'is_accepting_mentees' => 'sometimes|boolean',
         ]);
 
         if ($validator->fails()) {
@@ -60,7 +61,7 @@ class UserController extends Controller
 
         $user->update($request->only([
             'name', 'email', 'linkedin_url', 'short_bio', 'job_title', 
-            'company', 'department', 'student_id', 'cgpa'
+            'company', 'department', 'student_id', 'cgpa', 'is_accepting_mentees'
         ]));
 
         return response()->json([

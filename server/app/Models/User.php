@@ -24,6 +24,7 @@ class User extends Authenticatable
         'department',
         'cgpa',
         'recruiter_company',
+        'is_accepting_mentees',
     ];
 
     protected $hidden = [
@@ -33,5 +34,6 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_accepting_mentees' => 'boolean',
     ];
 }
