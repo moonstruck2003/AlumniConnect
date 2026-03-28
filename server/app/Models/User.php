@@ -24,6 +24,7 @@ class User extends Authenticatable
         'department',
         'cgpa',
         'recruiter_company',
+        'is_accepting_mentees',
     ];
 
     protected $hidden = [
@@ -33,10 +34,21 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_accepting_mentees' => 'boolean',
     ];
 
     public function jobPostings()
     {
         return $this->hasMany(JobPosting::class);
+    }
+
+    public function mentorshipRequests()
+    {
+        return $this->hasMany(MentorshipRequest::class, 'mentor_id');
+    }
+
+    public function sentMentorshipRequests()
+    {
+        return $this->hasMany(MentorshipRequest::class, 'mentee_id');
     }
 }

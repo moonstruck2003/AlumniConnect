@@ -4,24 +4,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\MentorshipController;
 use App\Http\Controllers\Api\JobPostingController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Api\MentorshipController;
 
-
+// Login API
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 
-// Team er custom JWT security block
+// Team er custom JWT security block (Ekta middleware block-ei shob thakbe)
 Route::middleware([\App\Http\Middleware\AuthenticateJwt::class])->group(function () {
     
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-    Route::get('/profile', function (Request $request) {
-        return response()->json(['user' => $request->user()], 200);
-    });
+    Route::put('/user', [UserController::class, 'update']);
     
-    // Job Postings API
+    // Job Postings
     Route::get('/jobs', [JobPostingController::class, 'index']);
     Route::post('/jobs', [JobPostingController::class, 'store']);
     Route::get('/jobs/me', [JobPostingController::class, 'myPostings']);
@@ -31,11 +29,18 @@ Route::middleware([\App\Http\Middleware\AuthenticateJwt::class])->group(function
     // Logout API
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
     
-    // Mentorship API (Ekhon ar kono extra sanctum jhamela nai)
+    // Mentorship API
     Route::post('/mentorship/send', [MentorshipController::class, 'sendRequest']);
     Route::get('/mentorship/incoming', [MentorshipController::class, 'getIncomingRequests']);
+    
+    // Additional Mentorship Routes
+    Route::get('/mentorship/mentors', [MentorshipController::class, 'mentors']);
+    Route::post('/mentorship/requests', [MentorshipController::class, 'requestMentorship']);
+    Route::get('/mentorship/requests', [MentorshipController::class, 'myRequests']);
+    Route::put('/mentorship/requests/{id}', [MentorshipController::class, 'updateRequestStatus']);
 });
 
+// Public / Other Routes
 Route::get('/session', [SessionController::class, 'getSession']);
 Route::post('/session', [SessionController::class, 'createSession'])->middleware('check.admin');
 Route::put('/session', [SessionController::class, 'updateSession'])->middleware('check.admin');

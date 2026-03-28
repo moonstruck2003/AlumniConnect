@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { User, Building2, Linkedin, FileText, Loader, Briefcase, CheckCircle, XCircle, Edit2, Save, X } from 'lucide-react';
+import { User, Briefcase, Linkedin, FileText, Loader, GraduationCap, Edit2, Save, X } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import ApiClient from '../api';
-import './RecruiterProfile.css';
+import './AlumniProfile.css';
 import toast from 'react-hot-toast';
 
 interface ProfileData {
@@ -10,19 +10,20 @@ interface ProfileData {
   name: string;
   email: string;
   role: string;
-  recruiter_company: string | null;
   linkedin_url: string | null;
   short_bio: string | null;
   company: string | null;
   job_title: string | null;
+  department: string | null;
+  student_id: string | null;
+  cgpa: string | null;
+  is_accepting_mentees: boolean;
 }
 
-export default function RecruiterProfile() {
+export default function AlumniProfile() {
   const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [myJobs, setMyJobs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Partial<ProfileData>>({});
 
@@ -32,16 +33,20 @@ export default function RecruiterProfile() {
     try {
       const api = new ApiClient();
       const data = await api.getProfile();
-      console.log('Profile API Response:', data); // Debug log
+      console.log('Profile API Response:', data);
 
       if (data && data.user) {
         setProfile(data.user);
         setFormData(data.user);
       } else if (data && data.id) {
-        setProfile(data); // If not wrapped in { user: ... }
+        setProfile(data);
         setFormData(data);
+      } else if (data && data.data) {
+        setProfile(data.data);
+        setFormData(data.data);
       } else {
-        throw new Error('Failed to parse profile data format');
+        console.error('Invalid profile data format:', data);
+        throw new Error('Failed to load profile - Invalid format');
       }
     } catch (err: any) {
       setError(err.message || 'Something went wrong');
@@ -50,33 +55,8 @@ export default function RecruiterProfile() {
     }
   };
 
-  const fetchMyJobs = async () => {
-    try {
-      const api = new ApiClient();
-      const data = await api.getMyJobs();
-      if (data && data.success) {
-        setMyJobs(data.data);
-      }
-    } catch (err: any) {
-      console.error('Error fetching jobs', err);
-    }
-  };
-
-  const handleToggleJob = async (jobId: number) => {
-    try {
-      const api = new ApiClient();
-      const data = await api.toggleJobStatus(jobId);
-      if (data && data.success) {
-        setMyJobs(myJobs.map(job => job.id === jobId ? { ...job, is_active: data.is_active } : job));
-      }
-    } catch (error) {
-      console.error('Failed to toggle job', error);
-    }
-  };
-
   useEffect(() => {
     fetchProfile();
-    fetchMyJobs();
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -86,20 +66,18 @@ export default function RecruiterProfile() {
   const handleSave = async () => {
     try {
       const api = new ApiClient();
-      // the api endpoint accepts recruiter_company, linkedin, etc.
-      // mapped internally to user table
       const data = await api.updateProfile(formData);
       if (data && data.user) {
         setProfile(data.user);
         setIsEditing(false);
-        toast.success('Recruiter profile updated successfully!');
+        toast.success('Profile updated successfully!');
       } else if (data && data.id) {
         setProfile(data);
         setIsEditing(false);
-        toast.success('Recruiter profile updated successfully!');
+        toast.success('Profile updated successfully!');
       }
     } catch (err) {
-      toast.error('Failed to update recruiter profile');
+      toast.error('Failed to update profile');
     }
   };
 
@@ -144,7 +122,6 @@ export default function RecruiterProfile() {
         {/* Header */}
         <div className="profile-header">
           <div className="profile-avatar">{initials}</div>
-          
           {isEditing ? (
             <input 
               className="edit-input name-edit" 
@@ -155,7 +132,6 @@ export default function RecruiterProfile() {
           ) : (
             <h1 className="profile-name">{profile.name}</h1>
           )}
-          
           <span className="profile-role-badge">{profile.role}</span>
           
           <div className="profile-actions">
@@ -188,9 +164,7 @@ export default function RecruiterProfile() {
             </div>
             <div className="info-item">
               <span className="info-label">Email</span>
-              <span className="info-value">
-                <a href={`mailto:${profile.email}`}>{profile.email}</a>
-              </span>
+              <span className="info-value">{profile.email}</span>
             </div>
             <div className="info-item">
               <span className="info-label">Role</span>
@@ -198,29 +172,85 @@ export default function RecruiterProfile() {
                 {profile.role}
               </span>
             </div>
+            <div className="info-item full-width" style={{ marginTop: '0.5rem' }}>
+              <span className="info-label">Mentorship Status</span>
+              {isEditing ? (
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: 'white' }}>
+                  <input
+                    type="checkbox"
+                    name="is_accepting_mentees"
+                    checked={!!formData.is_accepting_mentees}
+                    onChange={(e) => setFormData({ ...formData, is_accepting_mentees: e.target.checked })}
+                    style={{ width: '1.2rem', height: '1.2rem', accentColor: '#10b981' }}
+                  />
+                  <span>{formData.is_accepting_mentees ? 'Yes, accepting requests' : 'No, currently at capacity'}</span>
+                </label>
+              ) : (
+                <span className={`status-badge ${profile.is_accepting_mentees ? 'available' : 'unavailable'}`} style={{ display: 'inline-block', width: 'fit-content', marginTop: '0.25rem' }}>
+                  {profile.is_accepting_mentees ? 'Accepting Mentees' : 'At Capacity'}
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Company Info (Recruiter specific) */}
-        {profile.role === 'recruiter' && (
-          <div className="profile-card">
+        {/* Academic Details */}
+        <div className="profile-card">
+          <h3 className="card-title">
+            <GraduationCap size={20} /> Academic Details
+          </h3>
+          <div className="info-grid">
+            <div className="info-item">
+              <span className="info-label">Department</span>
+              {isEditing ? (
+                  <input className="edit-input" name="department" value={formData.department || ''} onChange={handleInputChange} placeholder="e.g. Computer Science"/>
+              ) : (
+                  <span className={`info-value ${!profile.department ? 'empty' : ''}`}>{profile.department || 'Not provided'}</span>
+              )}
+            </div>
+            <div className="info-item">
+              <span className="info-label">Student ID</span>
+              {isEditing ? (
+                  <input className="edit-input" name="student_id" value={formData.student_id || ''} onChange={handleInputChange} placeholder="e.g. 1910001"/>
+              ) : (
+                  <span className={`info-value ${!profile.student_id ? 'empty' : ''}`}>{profile.student_id || 'Not provided'}</span>
+              )}
+            </div>
+            <div className="info-item">
+              <span className="info-label">CGPA</span>
+              {isEditing ? (
+                  <input className="edit-input" name="cgpa" type="number" step="0.01" value={formData.cgpa || ''} onChange={handleInputChange} placeholder="e.g. 3.8"/>
+              ) : (
+                  <span className={`info-value ${!profile.cgpa ? 'empty' : ''}`}>{profile.cgpa || 'Not provided'}</span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Professional Details */}
+        <div className="profile-card">
             <h3 className="card-title">
-              <Building2 size={20} /> Company Details
+              <Briefcase size={20} /> Professional Details
             </h3>
             <div className="info-grid">
               <div className="info-item">
-                <span className="info-label">Company Name</span>
-                {isEditing ? (
-                  <input className="edit-input" name="recruiter_company" value={formData.recruiter_company || ''} onChange={handleInputChange} placeholder="e.g. Acme Corp"/>
-                ) : (
-                  <span className={`info-value ${!profile.recruiter_company ? 'empty' : ''}`}>
-                    {profile.recruiter_company || 'Not provided'}
-                  </span>
-                )}
+                <span className="info-label">Job Title</span>
+                  {isEditing ? (
+                      <input className="edit-input" name="job_title" value={formData.job_title || ''} onChange={handleInputChange} placeholder="e.g. Software Engineer"/>
+                  ) : (
+                      <span className={`info-value ${!profile.job_title ? 'empty' : ''}`}>{profile.job_title || 'Not provided'}</span>
+                  )}
+              </div>
+              <div className="info-item">
+                <span className="info-label">Company</span>
+                  {isEditing ? (
+                      <input className="edit-input" name="company" value={formData.company || ''} onChange={handleInputChange} placeholder="e.g. Google"/>
+                  ) : (
+                      <span className={`info-value ${!profile.company ? 'empty' : ''}`}>{profile.company || 'Not provided'}</span>
+                  )}
               </div>
             </div>
-          </div>
-        )}
+        </div>
 
         {/* Additional Info */}
         <div className="profile-card">
@@ -228,8 +258,8 @@ export default function RecruiterProfile() {
             <FileText size={20} /> Additional Details
           </h3>
           <div className="info-grid">
-            <div className="info-item">
-              <span className="info-label">LinkedIn</span>
+            <div className="info-item full-width">
+              <span className="info-label">LinkedIn URL</span>
               {isEditing ? (
                   <input className="edit-input" name="linkedin_url" value={formData.linkedin_url || ''} onChange={handleInputChange} placeholder="https://linkedin.com/in/username"/>
               ) : (
@@ -248,7 +278,7 @@ export default function RecruiterProfile() {
             <div className="info-item full-width">
               <span className="info-label">Bio</span>
               {isEditing ? (
-                  <textarea className="edit-textarea" name="short_bio" value={formData.short_bio || ''} onChange={handleInputChange} placeholder="Tell candidates about yourself..." rows={4}/>
+                  <textarea className="edit-textarea" name="short_bio" value={formData.short_bio || ''} onChange={handleInputChange} placeholder="Tell us about yourself..." rows={4}/>
               ) : (
                   <span className={`info-value ${!profile.short_bio ? 'empty' : ''}`}>
                     {profile.short_bio || 'No bio added yet'}
@@ -257,41 +287,6 @@ export default function RecruiterProfile() {
             </div>
           </div>
         </div>
-
-        {/* My Job Postings Management - Recruiter Only */}
-        {profile.role === 'recruiter' && (
-          <div className="profile-card">
-            <h3 className="card-title">
-              <Briefcase size={20} /> My Job Posts
-            </h3>
-            {myJobs.length === 0 ? (
-              <p className="empty-jobs-text">You haven't posted any jobs or internships yet.</p>
-            ) : (
-              <div className="managed-jobs-list">
-                {myJobs.map((job) => (
-                  <div key={job.id} className={`managed-job-item ${!job.is_active ? 'inactive' : ''}`}>
-                    <div className="job-info">
-                      <h4>{job.title}</h4>
-                      <span className="job-meta">{job.type} • {new Date(job.created_at).toLocaleDateString()}</span>
-                    </div>
-                    <div className="job-actions">
-                      <button 
-                        className={`status-toggle ${job.is_active ? 'active' : 'inactive'}`} 
-                        onClick={() => handleToggleJob(job.id)}
-                      >
-                        {job.is_active ? (
-                          <><CheckCircle size={16} /> Active</>
-                        ) : (
-                          <><XCircle size={16} /> Hidden</>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );

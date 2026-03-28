@@ -48,13 +48,70 @@ class ApiClient {
     }
   }
 
-  async getProfile() {
+  async createSession(name: string, duration: number, username: string, password: string) {
     try {
-      const response = await this.client.get('/api/profile');
+      if (!username || !password) {
+        toast.error('Credentials are required');
+        return;
+      }
+      const response = await this.client.post('/api/session', { name, duration, username, password });
       return response.data;
     } catch (error) {
       this.handleError(error);
-      throw error;
+    }
+  }
+
+  async updateSession(session_id: number, active: boolean, username: string, password: string) {
+    try {
+      if (!username || !password) {
+        toast.error('Credentials are required');
+        return;
+      }
+
+      const response = await this.client.put('/api/session', { session_id, active, username, password });
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async submitAttendance(roll: number) {
+    try {
+      const response = await this.client.post('/api/attendance', { roll });
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async viewSessions(username: string, password: string) {
+    try {
+      if (!username || !password) {
+        toast.error('Credentials are required');
+        return;
+      }
+      const response = await this.client.post('/api/sessions', { username, password });
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async getProfile() {
+    try {
+      const response = await this.client.get('/api/user');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async updateProfile(profileData: any) {
+    try {
+      const response = await this.client.put('/api/user', profileData);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
     }
   }
 
@@ -102,49 +159,36 @@ class ApiClient {
     }
   }
 
-  async createSession(name: string, duration: number, username: string, password: string) {
+  async getMentors() {
     try {
-      if (!username || !password) {
-        toast.error('Credentials are required');
-        return;
-      }
-      const response = await this.client.post('/api/session', { name, duration, username, password });
+      const response = await this.client.get('/api/mentorship/mentors');
       return response.data;
     } catch (error) {
       this.handleError(error);
     }
   }
 
-  async updateSession(session_id: number, active: boolean, username: string, password: string) {
+  async requestMentorship(mentor_id: number, message: string) {
     try {
-      if (!username || !password) {
-        toast.error('Credentials are required');
-        return;
-      }
-
-      const response = await this.client.put('/api/session', { session_id, active, username, password });
+      const response = await this.client.post('/api/mentorship/requests', { mentor_id, message });
       return response.data;
     } catch (error) {
       this.handleError(error);
     }
   }
 
-  async submitAttendance(roll: number) {
+  async getMentorshipRequests() {
     try {
-      const response = await this.client.post('/api/attendance', { roll });
+      const response = await this.client.get('/api/mentorship/requests');
       return response.data;
     } catch (error) {
       this.handleError(error);
     }
   }
 
-  async viewSessions(username: string, password: string) {
+  async updateMentorshipRequestStatus(id: number, status: string) {
     try {
-      if (!username || !password) {
-        toast.error('Credentials are required');
-        return;
-      }
-      const response = await this.client.post('/api/sessions', { username, password });
+      const response = await this.client.put(`/api/mentorship/requests/${id}`, { status });
       return response.data;
     } catch (error) {
       this.handleError(error);

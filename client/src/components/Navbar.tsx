@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-    Users, Briefcase, Calendar,
-    BookOpen, LayoutDashboard, Menu, X, Info, LogOut, UserCircle
+    Users, Briefcase, Calendar, User as UserIcon,
+    BookOpen, LayoutDashboard, Menu, X, Info, LogOut
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
@@ -14,7 +14,7 @@ interface NavbarProps {
 
 export default function Navbar({ activeItem = 'Dashboard' }: NavbarProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const { isAuthenticated, logout, user } = useAuth();
+    const { isAuthenticated, logout } = useAuth();
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -53,8 +53,8 @@ export default function Navbar({ activeItem = 'Dashboard' }: NavbarProps) {
                     <Link to="/jobs" className={`nav-item ${activeItem === 'Jobs & Internships' ? 'active' : ''}`}><Briefcase size={18} /> Jobs & Internships</Link>
                     <Link to="/events" className={`nav-item ${activeItem === 'Events' ? 'active' : ''}`}><Calendar size={18} /> Events</Link>
                     <Link to="/about" className={`nav-item ${activeItem === 'About Us' ? 'active' : ''}`}><Info size={18} /> About Us</Link>
-                    {user?.role === 'recruiter' && (
-                        <Link to="/profile" className={`nav-item ${activeItem === 'Profile' ? 'active' : ''}`}><UserCircle size={18} /> Profile</Link>
+                    {isAuthenticated && (
+                        <Link to="/profile" className={`nav-item ${activeItem === 'Profile' ? 'active' : ''}`}><UserIcon size={18} /> Profile</Link>
                     )}
                 </div>
 

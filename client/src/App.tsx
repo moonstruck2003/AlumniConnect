@@ -4,7 +4,6 @@ import Home from './views/Home';
 import Dashboard from './views/Dashboard';
 import Login from './views/Login';
 import Signup from './views/Signup';
-import ForgotPassword from './views/ForgotPassword';
 import AlumniDirectory from './views/AlumniDirectory';
 import About from './About.tsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -14,16 +13,16 @@ import Sessions from './views/Sessions';
 import Events from './views/Events';
 import Mentorship from './views/Mentorship';
 import Jobs from './views/Jobs';
-import RecruiterProfile from './views/RecruiterProfile';
+import ProfileRouter from './views/ProfileRouter';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/" element={<Home />} />
 
         <Route
           element={
@@ -41,7 +40,7 @@ function App() {
           <Route path="/sessions" element={<Sessions />} />
           <Route path="/mentorship" element={<Mentorship />} />
           <Route path="/jobs" element={<Jobs />} />
-          <Route path="/profile" element={<RecruiterProfile />} />
+          <Route path="/profile" element={<ProfileRouter />} />
         </Route>
       </Routes>
       <Toaster

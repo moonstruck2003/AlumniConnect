@@ -10,7 +10,12 @@ class MentorshipRequest extends Model
     use HasFactory;
 
     // Database-e je field gulo amra save korbo
-    protected $fillable = ['student_id', 'alumni_id', 'status', 'message'];
+    protected $fillable = [
+        'student_id', 
+        'alumni_id', 
+        'status', 
+        'message'
+    ];
 
     // Relation: Ei request-ta kon student pathaise
     public function student() {
