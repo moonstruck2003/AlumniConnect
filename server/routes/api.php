@@ -41,6 +41,11 @@ Route::middleware(['jwt'])->group(function () {
     Route::post('/mentorship/requests', [MentorshipController::class, 'requestMentorship']);
     Route::get('/mentorship/requests', [MentorshipController::class, 'myRequests']);
     Route::put('/mentorship/requests/{id}', [MentorshipController::class, 'updateRequestStatus']);
+
+    // Messaging Routes
+    Route::get('/messages/conversations', [\App\Http\Controllers\MessageController::class, 'getConversations']);
+    Route::get('/messages/{userId}', [\App\Http\Controllers\MessageController::class, 'getConversation']);
+    Route::post('/messages', [\App\Http\Controllers\MessageController::class, 'sendMessage']);
 });
 
 Route::get('/session', [SessionController::class, 'getSession']);

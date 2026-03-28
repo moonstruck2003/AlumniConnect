@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Search, Filter, MapPin, Award, Loader } from 'lucide-react';
+import { Search, Filter, MapPin, Award, Loader, MessageSquare } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import ApiClient from '../api';
 import { useAuth } from '../context/AuthContext';
@@ -8,6 +9,7 @@ import './Mentorship.css';
 
 export default function Mentorship() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('find');
   const [mentors, setMentors] = useState<any[]>([]);
   const [requests, setRequests] = useState<any[]>([]);
@@ -169,16 +171,31 @@ export default function Mentorship() {
                     </div>
 
                     {user?.id !== mentor.id ? (
-                      <button 
-                        className="action-btn" 
-                        onClick={() => openRequestModal(mentor)}
-                        disabled={!mentor.is_accepting_mentees}
-                        style={{ opacity: mentor.is_accepting_mentees ? 1 : 0.5, cursor: mentor.is_accepting_mentees ? 'pointer' : 'not-allowed' }}
-                      >
-                        {mentor.is_accepting_mentees ? 'Request Mentorship' : 'Unavailable'}
-                      </button>
+                      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+                        <button 
+                          className="action-btn" 
+                          onClick={() => openRequestModal(mentor)}
+                          disabled={!mentor.is_accepting_mentees}
+                          style={{ flex: 1, opacity: mentor.is_accepting_mentees ? 1 : 0.5, cursor: mentor.is_accepting_mentees ? 'pointer' : 'not-allowed' }}
+                        >
+                          {mentor.is_accepting_mentees ? 'Request Mentorship' : 'Unavailable'}
+                        </button>
+                        <button 
+                          onClick={() => navigate('/messages', { state: { selectedUser: mentor } })}
+                          title="Send Message"
+                          style={{ 
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', width: '3rem',
+                            background: 'rgba(255,255,255,0.05)', color: 'white', border: '1px solid var(--card-border)', 
+                            borderRadius: '0.5rem', cursor: 'pointer', transition: 'all 0.2s', flexShrink: 0
+                          }}
+                          onMouseOver={(e) => {e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.borderColor = 'var(--accent-emerald)'; e.currentTarget.style.color = 'var(--accent-emerald)';}}
+                          onMouseOut={(e) => {e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.borderColor = 'var(--card-border)'; e.currentTarget.style.color = 'white';}}
+                        >
+                          <MessageSquare size={18} />
+                        </button>
+                      </div>
                     ) : (
-                       <button className="action-btn" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
+                       <button className="action-btn" disabled style={{ opacity: 0.5, cursor: 'not-allowed', marginTop: '1rem' }}>
                         This is You
                       </button>
                     )}

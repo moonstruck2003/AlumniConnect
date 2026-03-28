@@ -6,6 +6,7 @@ import Login from './views/Login';
 import Signup from './views/Signup';
 import AlumniDirectory from './views/AlumniDirectory';
 import About from './About.tsx';
+import Messages from './views/Messages';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import { Toaster } from 'react-hot-toast';
@@ -36,6 +37,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/alumni" element={<AlumniDirectory />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/messages" element={<Messages />} />
           <Route path="/about" element={<About />} />
           <Route path="/sessions" element={<Sessions />} />
           <Route path="/mentorship" element={<Mentorship />} />
