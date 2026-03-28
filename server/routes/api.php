@@ -6,22 +6,14 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\JobPostingController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Api\MentorshipController;
 
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 
+// Team er custom JWT security block
 Route::middleware([\App\Http\Middleware\AuthenticateJwt::class])->group(function () {
+    
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
@@ -36,7 +28,12 @@ Route::middleware([\App\Http\Middleware\AuthenticateJwt::class])->group(function
     Route::patch('/jobs/{id}/toggle-status', [JobPostingController::class, 'toggleStatus']);
     Route::delete('/jobs/{id}', [JobPostingController::class, 'destroy']);
 
+    // Logout API
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
+    
+    // Mentorship API (Ekhon ar kono extra sanctum jhamela nai)
+    Route::post('/mentorship/send', [MentorshipController::class, 'sendRequest']);
+    Route::get('/mentorship/incoming', [MentorshipController::class, 'getIncomingRequests']);
 });
 
 Route::get('/session', [SessionController::class, 'getSession']);
