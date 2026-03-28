@@ -17,6 +17,7 @@ interface ProfileData {
   department: string | null;
   student_id: string | null;
   cgpa: string | null;
+  is_accepting_mentees: boolean;
 }
 
 export default function AlumniProfile() {
@@ -170,6 +171,25 @@ export default function AlumniProfile() {
               <span className="info-value" style={{ textTransform: 'capitalize' }}>
                 {profile.role}
               </span>
+            </div>
+            <div className="info-item full-width" style={{ marginTop: '0.5rem' }}>
+              <span className="info-label">Mentorship Status</span>
+              {isEditing ? (
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: 'white' }}>
+                  <input
+                    type="checkbox"
+                    name="is_accepting_mentees"
+                    checked={!!formData.is_accepting_mentees}
+                    onChange={(e) => setFormData({ ...formData, is_accepting_mentees: e.target.checked })}
+                    style={{ width: '1.2rem', height: '1.2rem', accentColor: '#10b981' }}
+                  />
+                  <span>{formData.is_accepting_mentees ? 'Yes, accepting requests' : 'No, currently at capacity'}</span>
+                </label>
+              ) : (
+                <span className={`status-badge ${profile.is_accepting_mentees ? 'available' : 'unavailable'}`} style={{ display: 'inline-block', width: 'fit-content', marginTop: '0.25rem' }}>
+                  {profile.is_accepting_mentees ? 'Accepting Mentees' : 'At Capacity'}
+                </span>
+              )}
             </div>
           </div>
         </div>

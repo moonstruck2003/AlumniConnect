@@ -133,6 +133,42 @@ class ApiClient {
     }
   }
 
+  async getMentors() {
+    try {
+      const response = await this.client.get('/api/mentorship/mentors');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async requestMentorship(mentor_id: number, message: string) {
+    try {
+      const response = await this.client.post('/api/mentorship/requests', { mentor_id, message });
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async getMentorshipRequests() {
+    try {
+      const response = await this.client.get('/api/mentorship/requests');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async updateMentorshipRequestStatus(id: number, status: string) {
+    try {
+      const response = await this.client.put(`/api/mentorship/requests/${id}`, { status });
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
   // Handle common errors
   handleError(error: any) {
     if (error.response) {

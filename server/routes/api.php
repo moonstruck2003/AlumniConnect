@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\MentorshipController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
@@ -26,6 +27,12 @@ Route::middleware(['jwt'])->group(function () {
     });
     Route::put('/user', [UserController::class, 'update']);
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
+    
+    // Mentorship Routes
+    Route::get('/mentorship/mentors', [MentorshipController::class, 'mentors']);
+    Route::post('/mentorship/requests', [MentorshipController::class, 'requestMentorship']);
+    Route::get('/mentorship/requests', [MentorshipController::class, 'myRequests']);
+    Route::put('/mentorship/requests/{id}', [MentorshipController::class, 'updateRequestStatus']);
 });
 
 Route::get('/session', [SessionController::class, 'getSession']);
