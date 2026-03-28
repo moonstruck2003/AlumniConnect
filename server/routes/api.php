@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\MentorshipController;
+use App\Http\Controllers\Api\JobPostingController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
@@ -28,6 +29,13 @@ Route::middleware(['jwt'])->group(function () {
     Route::put('/user', [UserController::class, 'update']);
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
     
+    // Job Postings
+    Route::get('/jobs', [JobPostingController::class, 'index']);
+    Route::post('/jobs', [JobPostingController::class, 'store']);
+    Route::get('/jobs/me', [JobPostingController::class, 'myPostings']);
+    Route::patch('/jobs/{id}/toggle-status', [JobPostingController::class, 'toggleStatus']);
+    Route::delete('/jobs/{id}', [JobPostingController::class, 'destroy']);
+
     // Mentorship Routes
     Route::get('/mentorship/mentors', [MentorshipController::class, 'mentors']);
     Route::post('/mentorship/requests', [MentorshipController::class, 'requestMentorship']);

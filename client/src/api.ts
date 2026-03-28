@@ -115,21 +115,47 @@ class ApiClient {
     }
   }
 
-  async getMyJobs() {
+  // Job Postings API
+  async getJobs(type?: string) {
     try {
-      const response = await this.client.get('/api/jobs');
+      const url = type ? `/api/jobs?type=${type}` : '/api/jobs';
+      const response = await this.client.get(url);
       return response.data;
     } catch (error) {
       this.handleError(error);
+      throw error;
     }
   }
 
-  async toggleJobStatus(jobId: number) {
+  async createJob(jobData: { title: string, company: string, type: string, location?: string, description: string, contact_email?: string, contact_phone?: string, application_link?: string }) {
     try {
-      const response = await this.client.post(`/api/jobs/${jobId}/toggle`);
+      const response = await this.client.post('/api/jobs', jobData);
+      toast.success(response.data.message || 'Job posted successfully');
       return response.data;
     } catch (error) {
       this.handleError(error);
+      throw error;
+    }
+  }
+
+  async getMyJobs() {
+    try {
+      const response = await this.client.get('/api/jobs/me');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async toggleJobStatus(id: number) {
+    try {
+      const response = await this.client.patch(`/api/jobs/${id}/toggle-status`);
+      toast.success(response.data.message || 'Status updated');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
     }
   }
 
