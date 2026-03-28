@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\MentorshipRequest;
 
 class MessageController extends Controller
 {
@@ -34,6 +35,20 @@ class MessageController extends Controller
             'receiver_id' => 'required|exists:users,id',
             'content' => 'required|string',
         ]);
+
+       
+       $isAccepted = MentorshipRequest::where('mentee_id', auth()->id()) // student_id এর বদলে mentee_id
+    ->where('mentor_id', $request->receiver_id) // alumni_id এর বদলে mentor_id
+    ->where('status', 'accepted')
+    ->exists();
+
+        
+        if (!$isAccepted) {
+            return response()->json([
+                'message' => 'Must be accepted as a mentee to send messages.'
+            ], 403);
+        }
+       
 
         $message = Message::create([
             'sender_id' => auth()->id(),
