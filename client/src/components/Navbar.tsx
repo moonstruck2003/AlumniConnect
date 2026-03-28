@@ -3,13 +3,13 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import {
     Users, Briefcase, Calendar, User as UserIcon,
-    BookOpen, LayoutDashboard, Menu, X, Info, LogOut
+    BookOpen, LayoutDashboard, Menu, X, Info, LogOut, MessageSquare
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 
 interface NavbarProps {
-    activeItem?: 'Dashboard' | 'Alumni Directory' | 'Mentorship' | 'Jobs & Internships' | 'Events' | 'About Us' | 'Profile';
+    activeItem?: 'Dashboard' | 'Alumni Directory' | 'Mentorship' | 'Jobs & Internships' | 'Events' | 'About Us' | 'Profile' | 'Messages';
 }
 
 export default function Navbar({ activeItem = 'Dashboard' }: NavbarProps) {
@@ -54,7 +54,10 @@ export default function Navbar({ activeItem = 'Dashboard' }: NavbarProps) {
                     <Link to="/events" className={`nav-item ${activeItem === 'Events' ? 'active' : ''}`}><Calendar size={18} /> Events</Link>
                     <Link to="/about" className={`nav-item ${activeItem === 'About Us' ? 'active' : ''}`}><Info size={18} /> About Us</Link>
                     {isAuthenticated && (
-                        <Link to="/profile" className={`nav-item ${activeItem === 'Profile' ? 'active' : ''}`}><UserIcon size={18} /> Profile</Link>
+                        <>
+                            <Link to="/messages" className={`nav-item ${activeItem === 'Messages' ? 'active' : ''}`}><MessageSquare size={18} /> Messages</Link>
+                            <Link to="/profile" className={`nav-item ${activeItem === 'Profile' ? 'active' : ''}`}><UserIcon size={18} /> Profile</Link>
+                        </>
                     )}
                 </div>
 

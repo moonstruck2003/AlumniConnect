@@ -196,6 +196,36 @@ class ApiClient {
   }
 
   // Handle common errors
+  async getConversations() {
+    try {
+      const response = await this.client.get('/api/messages/conversations');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async getConversation(userId: number) {
+    try {
+      const response = await this.client.get(`/api/messages/${userId}`);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async sendMessage(receiver_id: number, content: string) {
+    try {
+      const response = await this.client.post('/api/messages', { receiver_id, content });
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
   handleError(error: any) {
     if (error.response) {
       // Server responded with a status other than 2xx
