@@ -48,60 +48,6 @@ class ApiClient {
     }
   }
 
-  async getProfile() {
-    try {
-      const response = await this.client.get('/api/profile');
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-      throw error;
-    }
-  }
-
-  // Job Postings API
-  async getJobs(type?: string) {
-    try {
-      const url = type ? `/api/jobs?type=${type}` : '/api/jobs';
-      const response = await this.client.get(url);
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-      throw error;
-    }
-  }
-
-  async createJob(jobData: { title: string, company: string, type: string, location?: string, description: string, contact_email?: string, contact_phone?: string, application_link?: string }) {
-    try {
-      const response = await this.client.post('/api/jobs', jobData);
-      toast.success(response.data.message || 'Job posted successfully');
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-      throw error;
-    }
-  }
-
-  async getMyJobs() {
-    try {
-      const response = await this.client.get('/api/jobs/me');
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-      throw error;
-    }
-  }
-
-  async toggleJobStatus(id: number) {
-    try {
-      const response = await this.client.patch(`/api/jobs/${id}/toggle-status`);
-      toast.success(response.data.message || 'Status updated');
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-      throw error;
-    }
-  }
-
   async createSession(name: string, duration: number, username: string, password: string) {
     try {
       if (!username || !password) {
@@ -145,6 +91,42 @@ class ApiClient {
         return;
       }
       const response = await this.client.post('/api/sessions', { username, password });
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async getProfile() {
+    try {
+      const response = await this.client.get('/api/user');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async updateProfile(profileData: any) {
+    try {
+      const response = await this.client.put('/api/user', profileData);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async getMyJobs() {
+    try {
+      const response = await this.client.get('/api/jobs');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async toggleJobStatus(jobId: number) {
+    try {
+      const response = await this.client.post(`/api/jobs/${jobId}/toggle`);
       return response.data;
     } catch (error) {
       this.handleError(error);
