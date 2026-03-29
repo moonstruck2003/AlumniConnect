@@ -3,83 +3,53 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\MentorshipRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 
-class MentorshipController extends Controller    
+class MentorshipController extends Controller
 {
-    // List available mentors (alumni)
-    public function mentors()
-    {
-        $mentors = User::where('role', 'alumni')->get();
-        return response()->json(['mentors' => $mentors]);
-    }
-
-    // Submit a request from a student to a mentor
-    public function requestMentorship(Request $request)
-    {
-        $request->validate([
-            'mentor_id' => 'required|exists:users,id',
-            'message' => 'nullable|string'
-        ]);
-
-        $mentee = $request->user();
-
-        // Check if a request already exists
-        $existing = MentorshipRequest::where('mentor_id', $request->mentor_id)
-            ->where('mentee_id', $mentee->id)
-            ->first();
-
-        if ($existing) {
-            return response()->json(['message' => 'A mentorship request already exists for this mentor. Check your requests.'], 400);
-        }
-
-        $mentorshipRequest = MentorshipRequest::create([
-            'mentor_id' => $request->mentor_id,
-            'mentee_id' => $mentee->id,
+    // ১. Student mentorship request pathabe
+    public function sendRequest(Request $request) {
+        $mentorship = MentorshipRequest::create([
+            'student_id' => auth()->id(),
+            'alumni_id' => $request->alumni_id,
             'message' => $request->message,
             'status' => 'pending'
         ]);
 
-        return response()->json(['message' => 'Mentorship request sent successfully.', 'request' => $mentorshipRequest], 201);
+        return response()->json(['message' => 'Request sent successfully!', 'data' => $mentorship]);
     }
 
-    // List all requests for the logged-in user
-    public function myRequests(Request $request)
-    {
-        $user = $request->user();
+    // ২. Alumni tar pending request gulo dekhbe
+    public function getIncomingRequests() {
+        $requests = MentorshipRequest::with('student')
+            ->where('alumni_id', auth()->id())
+            ->where('status', 'pending')
+            ->get();
 
-        // If user is alumni, show who requested them
-        if ($user->role === 'alumni') {
-            $requests = MentorshipRequest::with('mentee')
-                ->where('mentor_id', $user->id)
-                ->orderBy('created_at', 'desc')
-                ->get();
-            return response()->json(['type' => 'received', 'requests' => $requests]);
-        } 
-        // If student, show requests they sent
-        else {
-            $requests = MentorshipRequest::with('mentor')
-                ->where('mentee_id', $user->id)
-                ->orderBy('created_at', 'desc')
-                ->get();
-            return response()->json(['type' => 'sent', 'requests' => $requests]);
-        }
+        return response()->json($requests);
     }
 
-    // Accept or reject a request
-    public function updateRequestStatus(Request $request, $id)
-    {
-        $user = $request->user();
+    // ৩. List available mentors (alumni)
+    public function mentors() {
+        $mentors = User::where('role', 'alumni')->get();
+        return response()->json($mentors);
+    }
 
-        $request->validate([
-            'status' => 'required|in:accepted,rejected'
-        ]);
+    // ৪. Student-er nijer pathano request list
+    public function myRequests() {
+        $requests = MentorshipRequest::with('alumni')
+            ->where('student_id', auth()->id())
+            ->get();
+        return response()->json($requests);
+    }
 
+    // ৫. Alumni request accept ba reject korbe
+    public function updateRequestStatus(Request $request, $id) {
         $mentorshipRequest = MentorshipRequest::findOrFail($id);
 
-        if ($mentorshipRequest->mentor_id !== $user->id) {
+        if ($mentorshipRequest->alumni_id !== auth()->id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
