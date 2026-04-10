@@ -25,6 +25,7 @@ export default function StudentProfile() {
   const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Partial<ProfileData>>({});
+  const [mentorshipRequests, setMentorshipRequests] = useState<any[]>([]);
 
   const fetchProfile = async () => {
     setLoading(true);
@@ -44,6 +45,12 @@ export default function StudentProfile() {
         setFormData(data.data);
       } else {
         throw new Error('Failed to load profile');
+      }
+      
+      // Fetch mentorship requests
+      const requestsData = await api.getMentorshipRequests();
+      if (requestsData && requestsData.requests) {
+        setMentorshipRequests(requestsData.requests);
       }
     } catch (err: any) {
       setError(err.message || 'Something went wrong');
@@ -257,6 +264,32 @@ export default function StudentProfile() {
                   </span>
               )}
             </div>
+          </div>
+        </div>
+
+        {/* Mentorship Requests Section */}
+        <div className="profile-card">
+          <h3 className="card-title">
+            <User size={20} /> My Mentorship Requests
+          </h3>
+          <div className="mentorship-list-mini">
+            {mentorshipRequests.length === 0 ? (
+              <p className="empty-msg">No mentorship requests sent yet.</p>
+            ) : (
+              <div className="mini-requests-grid">
+                {mentorshipRequests.map((req) => (
+                  <div key={req.id} className="mini-req-item">
+                    <div className="mini-req-info">
+                      <span className="mentor-name-small">{req.mentor?.name}</span>
+                      <span className="req-date-small">{new Date(req.created_at).toLocaleDateString()}</span>
+                    </div>
+                    <span className={`status-tag-small ${req.status}`}>
+                      {req.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

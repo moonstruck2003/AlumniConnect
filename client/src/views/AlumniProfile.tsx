@@ -26,6 +26,7 @@ export default function AlumniProfile() {
   const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Partial<ProfileData>>({});
+  const [mentorshipRequests, setMentorshipRequests] = useState<any[]>([]);
 
   const fetchProfile = async () => {
     setLoading(true);
@@ -48,10 +49,30 @@ export default function AlumniProfile() {
         console.error('Invalid profile data format:', data);
         throw new Error('Failed to load profile - Invalid format');
       }
+
+      // Fetch received mentorship requests
+      const requestsData = await api.getMentorshipRequests();
+      if (requestsData && requestsData.requests) {
+        setMentorshipRequests(requestsData.requests);
+      }
     } catch (err: any) {
       setError(err.message || 'Something went wrong');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleStatusUpdate = async (id: number, status: string) => {
+    try {
+      const api = new ApiClient();
+      const response = await api.updateMentorshipRequestStatus(id, status);
+      if (response) {
+        toast.success(`Request ${status}`);
+        // Refresh local state
+        setMentorshipRequests(prev => prev.map(req => req.id === id ? { ...req, status } : req));
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -285,6 +306,42 @@ export default function AlumniProfile() {
                   </span>
               )}
             </div>
+          </div>
+        </div>
+
+        {/* Mentorship Management Section */}
+        <div className="profile-card">
+          <h3 className="card-title">
+            <User size={20} /> Received Mentorship Requests
+          </h3>
+          <div className="mentorship-list-mini">
+            {mentorshipRequests.length === 0 ? (
+              <p className="empty-msg">No pending requests received.</p>
+            ) : (
+              <div className="mini-requests-grid">
+                {mentorshipRequests.map((req) => (
+                  <div key={req.id} className="mini-req-item received">
+                    <div className="mini-req-info">
+                      <span className="mentee-name-small">{req.mentee?.name}</span>
+                      <p className="req-msg-preview">"{req.message || 'No message provided'}"</p>
+                      <span className="req-date-small">{new Date(req.created_at).toLocaleDateString()}</span>
+                    </div>
+                    <div className="mini-req-actions">
+                      {req.status === 'pending' ? (
+                        <>
+                          <button className="mini-btn-accept" onClick={() => handleStatusUpdate(req.id, 'accepted')}>Accept</button>
+                          <button className="mini-btn-reject" onClick={() => handleStatusUpdate(req.id, 'rejected')}>Reject</button>
+                        </>
+                      ) : (
+                        <span className={`status-tag-small ${req.status}`}>
+                          {req.status}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

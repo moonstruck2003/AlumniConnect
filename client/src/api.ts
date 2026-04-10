@@ -349,7 +349,8 @@ class ApiClient {
       console.error('API Error:', error.message);
     }
 
-    toast.error(error.message || 'Something went wrong');
+    const errorMessage = error.response?.data?.message || error.message || 'Something went wrong';
+    toast.error(errorMessage);
   }
 }
 
