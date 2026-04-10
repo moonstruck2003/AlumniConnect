@@ -6,7 +6,9 @@ import {
     BookOpen, LayoutDashboard, Menu, X, Info, LogOut, MessageSquare
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import ApiClient from '../api';
 import './Navbar.css';
+import { useEffect } from 'react';
 
 interface NavbarProps {
     activeItem?: 'Dashboard' | 'Alumni Directory' | 'Mentorship' | 'Jobs & Internships' | 'Events' | 'About Us' | 'Profile' | 'Messages';
@@ -15,7 +17,34 @@ interface NavbarProps {
 export default function Navbar({ activeItem = 'Dashboard' }: NavbarProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { isAuthenticated, logout } = useAuth();
+    const [countsByType, setCountsByType] = useState<{[key: string]: number}>({
+        message: 0,
+        job_application: 0,
+        mentorship: 0,
+        event: 0
+    });
     const navigate = useNavigate();
+    const api = new ApiClient();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            fetchCounts();
+            // Polling for notifications every 30 seconds
+            const interval = setInterval(fetchCounts, 30000);
+            return () => clearInterval(interval);
+        }
+    }, [isAuthenticated]);
+
+    const fetchCounts = async () => {
+        try {
+            const data = await api.getNotificationCountsByType();
+            if (data && data.success) {
+                setCountsByType(data.counts);
+            }
+        } catch (error) {
+            console.error('Failed to fetch counts', error);
+        }
+    };
 
     const handleLogout = () => {
         logout();
@@ -49,13 +78,41 @@ export default function Navbar({ activeItem = 'Dashboard' }: NavbarProps) {
                 <div className="nav-links">
                     <Link to="/dashboard" className={`nav-item ${activeItem === 'Dashboard' ? 'active' : ''}`}><LayoutDashboard size={18} /> Dashboard</Link>
                     <Link to="/alumni" className={`nav-item ${activeItem === 'Alumni Directory' ? 'active' : ''}`}><Users size={18} /> Alumni Directory</Link>
-                    <Link to="/mentorship" className={`nav-item ${activeItem === 'Mentorship' ? 'active' : ''}`}><BookOpen size={18} /> Mentorship</Link>
-                    <Link to="/jobs" className={`nav-item ${activeItem === 'Jobs & Internships' ? 'active' : ''}`}><Briefcase size={18} /> Jobs & Internships</Link>
-                    <Link to="/events" className={`nav-item ${activeItem === 'Events' ? 'active' : ''}`}><Calendar size={18} /> Events</Link>
+                    
+                    <Link to="/mentorship" className={`nav-item ${activeItem === 'Mentorship' ? 'active' : ''}`}>
+                        <div className="nav-icon-badge-wrapper">
+                            <BookOpen size={18} />
+                            {countsByType.mentorship > 0 && <span className="nav-badge-small">{countsByType.mentorship}</span>}
+                        </div>
+                        Mentorship
+                    </Link>
+
+                    <Link to="/jobs" className={`nav-item ${activeItem === 'Jobs & Internships' ? 'active' : ''}`}>
+                        <div className="nav-icon-badge-wrapper">
+                            <Briefcase size={18} />
+                            {countsByType.job_application > 0 && <span className="nav-badge-small">{countsByType.job_application}</span>}
+                        </div>
+                        Jobs & Internships
+                    </Link>
+
+                    <Link to="/events" className={`nav-item ${activeItem === 'Events' ? 'active' : ''}`}>
+                        <div className="nav-icon-badge-wrapper">
+                            <Calendar size={18} />
+                            {countsByType.event > 0 && <span className="nav-badge-small">{countsByType.event}</span>}
+                        </div>
+                        Events
+                    </Link>
+
                     <Link to="/about" className={`nav-item ${activeItem === 'About Us' ? 'active' : ''}`}><Info size={18} /> About Us</Link>
                     {isAuthenticated && (
                         <>
-                            <Link to="/messages" className={`nav-item ${activeItem === 'Messages' ? 'active' : ''}`}><MessageSquare size={18} /> Messages</Link>
+                            <Link to="/messages" className={`nav-item ${activeItem === 'Messages' ? 'active' : ''}`}>
+                                <div className="nav-icon-badge-wrapper">
+                                    <MessageSquare size={18} />
+                                    {countsByType.message > 0 && <span className="nav-badge-small">{countsByType.message}</span>}
+                                </div>
+                                Messages
+                            </Link>
                             <Link to="/profile" className={`nav-item ${activeItem === 'Profile' ? 'active' : ''}`}><UserIcon size={18} /> Profile</Link>
                         </>
                     )}

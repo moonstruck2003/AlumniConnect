@@ -205,6 +205,66 @@ class ApiClient {
     }
   }
 
+  async getNotifications(page = 1) {
+    try {
+      const response = await this.client.get(`/api/notifications?page=${page}`);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async getUnreadNotificationCount() {
+    try {
+      const response = await this.client.get('/api/notifications/unread-count');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async getNotificationCountsByType() {
+    try {
+      const response = await this.client.get('/api/notifications/unread-counts-by-type');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async markNotificationsTypeRead(type: string) {
+    try {
+      const response = await this.client.patch(`/api/notifications/type/${type}/read`);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async markNotificationRead(id: number) {
+    try {
+      const response = await this.client.patch(`/api/notifications/${id}/read`);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async markAllNotificationsRead() {
+    try {
+      const response = await this.client.post('/api/notifications/mark-all-read');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
   async getMentors() {
     try {
       const response = await this.client.get('/api/mentorship/mentors');

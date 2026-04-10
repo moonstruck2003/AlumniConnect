@@ -111,6 +111,9 @@ export default function Jobs() {
   useEffect(() => {
     fetchJobs();
     fetchMyApplications();
+    // Clear job notifications when page is opened
+    const api = new ApiClient();
+    api.markNotificationsTypeRead('job_application').catch(err => console.error(err));
   }, [filterType, user]);
 
   const handleCreateJob = async (e: React.FormEvent) => {

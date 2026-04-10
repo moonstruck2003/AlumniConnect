@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\MentorshipController;
 use App\Http\Controllers\Api\JobPostingController;
 use App\Http\Controllers\Api\JobApplicationController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
@@ -53,6 +54,14 @@ Route::middleware(['jwt'])->group(function () {
     Route::get('/messages/conversations', [\App\Http\Controllers\MessageController::class, 'getConversations']);
     Route::get('/messages/{userId}', [\App\Http\Controllers\MessageController::class, 'getConversation']);
     Route::post('/messages', [\App\Http\Controllers\MessageController::class, 'sendMessage']);
+
+    // Notification Routes
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
+    Route::get('/notifications/unread-counts-by-type', [NotificationController::class, 'unreadCountsByType']);
+    Route::patch('/notifications/type/{type}/read', [NotificationController::class, 'markTypeAsRead']);
+    Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
 });
 
 Route::get('/session', [SessionController::class, 'getSession']);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\JobPosting;
 use App\Models\JobApplication;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -45,6 +46,16 @@ class JobApplicationController extends Controller
             'resume_path' => $path,
             'cover_letter' => $request->cover_letter,
             'status' => 'pending',
+        ]);
+
+        // Notify Recruiter
+        Notification::create([
+            'user_id' => $job->user_id,
+            'sender_id' => $request->user()->id,
+            'type' => 'job_application',
+            'title' => 'New Job Application',
+            'message' => $request->user()->name . ' applied for ' . $job->title,
+            'link' => '/jobs', // Recruiter can view applicants here
         ]);
 
         return response()->json([
@@ -114,6 +125,16 @@ class JobApplicationController extends Controller
         }
 
         $application->update(['status' => $request->status]);
+
+        // Notify Student
+        Notification::create([
+            'user_id' => $application->user_id,
+            'sender_id' => $request->user()->id,
+            'type' => 'job_application',
+            'title' => 'Application Status Update',
+            'message' => 'Your application for ' . $application->jobPosting->title . ' has been ' . $request->status,
+            'link' => '/jobs', // Student can see their status here
+        ]);
 
         return response()->json([
             'success' => true,

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\MentorshipRequest;
 use App\Models\JobApplication;
+use App\Models\Notification;
 
 class MessageController extends Controller
 {
@@ -68,6 +69,16 @@ class MessageController extends Controller
             'receiver_id' => $request->receiver_id,
             'content' => $request->content,
             'is_read' => false,
+        ]);
+
+        // Trigger Notification
+        Notification::create([
+            'user_id' => $request->receiver_id,
+            'sender_id' => auth()->id(),
+            'type' => 'message',
+            'title' => 'New Message',
+            'message' => auth()->user()->name . ' sent you a message.',
+            'link' => '/messages',
         ]);
 
         return response()->json($message, 201);

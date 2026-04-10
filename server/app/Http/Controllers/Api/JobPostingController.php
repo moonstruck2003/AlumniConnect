@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\JobPosting;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -53,6 +54,22 @@ class JobPostingController extends Controller
         }
 
         $job = $request->user()->jobPostings()->create($validator->validated());
+
+        // Notify all Students and Alumni about the new opportunity
+        $targetUsers = \App\Models\User::whereIn('role', ['student', 'alumni'])
+            ->where('id', '!=', $request->user()->id)
+            ->get();
+
+        foreach ($targetUsers as $targetUser) {
+            Notification::create([
+                'user_id' => $targetUser->id,
+                'sender_id' => $request->user()->id,
+                'type' => 'job_application', // Using job_application type for the Jobs badge
+                'title' => 'New ' . ucfirst($job->type) . ' Posted',
+                'message' => $job->company . ' posted a new ' . $job->type . ': ' . $job->title,
+                'link' => '/jobs',
+            ]);
+        }
 
         return response()->json([
             'success' => true,

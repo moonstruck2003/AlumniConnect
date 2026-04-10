@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Filter, Calendar, MapPin, Clock } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import ApiClient from '../api';
 import './Events.css';
 
 // Dummy data for events
@@ -36,6 +37,12 @@ const eventsData = [
 
 export default function Events() {
   const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    // Clear event notifications when page is opened
+    const api = new ApiClient();
+    api.markNotificationsTypeRead('event').catch(err => console.error(err));
+  }, []);
 
   return (
     <div className="events-page-container">

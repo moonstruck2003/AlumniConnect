@@ -1,0 +1,156 @@
+.notification-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 350px;
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  margin-top: 0.5rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+}
+
+.dropdown-header {
+  padding: 1rem;
+  border-bottom: 1px solid #374151;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1f2937;
+}
+
+.dropdown-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #f3f4f6;
+}
+
+.mark-all-read {
+  font-size: 0.75rem;
+  color: #10b981;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.mark-all-read:hover {
+  text-decoration: underline;
+}
+
+.notifications-list {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.notification-item {
+  padding: 1rem;
+  border-bottom: 1px solid #1f2937;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  gap: 0.75rem;
+  position: relative;
+  text-decoration: none;
+}
+
+.notification-item:hover {
+  background: #1f2937;
+}
+
+.notification-item.unread {
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.notification-item.unread::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #10b981;
+}
+
+.notif-icon {
+  background: #374151;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.notif-icon.message { color: #3b82f6; }
+.notif-icon.job_application { color: #f59e0b; }
+.notif-icon.mentorship { color: #10b981; }
+
+.notif-content {
+  flex: 1;
+}
+
+.notif-title {
+  display: block;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #fff;
+  margin-bottom: 0.125rem;
+}
+
+.notif-msg {
+  display: block;
+  font-size: 0.8125rem;
+  color: #9ca3af;
+  line-height: 1.25;
+}
+
+.notif-time {
+  display: block;
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.notif-unread-dot {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  align-self: center;
+}
+
+.dropdown-footer {
+  padding: 0.75rem;
+  text-align: center;
+  border-top: 1px solid #374151;
+  background: #1f2937;
+}
+
+.view-all {
+  font-size: 0.8125rem;
+  color: #9ca3af;
+  text-decoration: none;
+}
+
+.view-all:hover {
+  color: #f3f4f6;
+}
+
+.empty-notifications {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.empty-notifications p {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}

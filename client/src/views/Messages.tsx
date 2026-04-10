@@ -48,6 +48,8 @@ export default function Messages() {
 
   useEffect(() => {
     fetchConversations();
+    // Clear message notifications when page is opened
+    api.markNotificationsTypeRead('message').catch(err => console.error(err));
   }, []);
 
   useEffect(() => {
