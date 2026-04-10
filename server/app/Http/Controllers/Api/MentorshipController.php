@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\MentorshipRequest;
 use App\Models\User;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 
 class MentorshipController extends Controller    
@@ -40,6 +41,16 @@ class MentorshipController extends Controller
             'mentee_id' => $mentee->id,
             'message' => $request->message,
             'status' => 'pending'
+        ]);
+
+        // Notify Mentor
+        Notification::create([
+            'user_id' => $request->mentor_id,
+            'sender_id' => $mentee->id,
+            'type' => 'mentorship',
+            'title' => 'New Mentorship Request',
+            'message' => $mentee->name . ' requested you as a mentor.',
+            'link' => '/mentorship',
         ]);
 
         return response()->json(['message' => 'Mentorship request sent successfully.', 'request' => $mentorshipRequest], 201);
@@ -85,6 +96,16 @@ class MentorshipController extends Controller
 
         $mentorshipRequest->update([
             'status' => $request->status
+        ]);
+
+        // Notify Mentee
+        Notification::create([
+            'user_id' => $mentorshipRequest->mentee_id,
+            'sender_id' => $user->id,
+            'type' => 'mentorship',
+            'title' => 'Mentorship Request Update',
+            'message' => $user->name . ' has ' . $request->status . ' your mentorship request.',
+            'link' => '/mentorship',
         ]);
 
         return response()->json(['message' => 'Request status updated successfully.', 'request' => $mentorshipRequest]);

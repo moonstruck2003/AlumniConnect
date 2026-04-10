@@ -47,6 +47,9 @@ export default function Mentorship() {
 
   useEffect(() => {
     fetchMentorsAndRequests();
+    // Clear mentorship notifications when page is opened
+    const api = new ApiClient();
+    api.markNotificationsTypeRead('mentorship').catch(err => console.error(err));
   }, []);
 
   const openRequestModal = (mentor: any) => {

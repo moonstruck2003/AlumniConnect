@@ -28,6 +28,62 @@
     margin: 0;
 }
 
+/* Network Insights */
+.network-insights {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.insight-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(16px);
+    border-radius: 1.25rem;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.insight-card:hover {
+    border-color: rgba(16, 185, 129, 0.4);
+    box-shadow: 0 8px 30px rgba(16, 185, 129, 0.1);
+}
+
+.insight-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.companies-icon { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+.mentors-icon { background: rgba(16, 185, 129, 0.1); color: var(--accent-emerald); }
+.global-icon { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+
+.insight-content h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin: 0 0 0.25rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.insight-content p {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0;
+}
+
 .filters-card {
     background: var(--card-bg);
     border: 1px solid var(--card-border);
@@ -103,15 +159,16 @@
 }
 
 .filter-options {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
     align-items: center;
     padding-top: 1rem;
     border-top: 1px solid var(--card-border);
 }
 
-.industry-select {
+.filter-select {
+    width: 100%;
     padding: 0.5rem 2rem 0.5rem 1rem;
     border: 1px solid var(--card-border);
     border-radius: 0.5rem;
@@ -128,12 +185,12 @@
     font-family: inherit;
 }
 
-.industry-select:focus {
+.filter-select:focus {
     border-color: var(--accent-emerald);
     box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
 }
 
-.industry-select option {
+.filter-select option {
     background-color: var(--bg-dark);
     color: var(--text-main);
 }
@@ -277,6 +334,23 @@
 .detail-item svg {
     color: var(--accent-emerald);
     flex-shrink: 0;
+}
+
+.skills-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.skill-tag {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--card-border);
+    color: var(--text-muted);
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
 }
 
 .btn-view-profile {

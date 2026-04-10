@@ -159,6 +159,112 @@ class ApiClient {
     }
   }
 
+  async applyToJob(jobId: number, formData: FormData) {
+    try {
+      const response = await this.client.post(`/api/jobs/${jobId}/apply`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      toast.success(response.data.message || 'Application submitted');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async getJobApplicants(jobId: number) {
+    try {
+      const response = await this.client.get(`/api/jobs/${jobId}/applicants`);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async updateApplicationStatus(applicationId: number, status: string) {
+    try {
+      const response = await this.client.patch(`/api/applications/${applicationId}/status`, { status });
+      toast.success(response.data.message || 'Status updated');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async getMyApplications() {
+    try {
+      const response = await this.client.get('/api/applications/me');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async getNotifications(page = 1) {
+    try {
+      const response = await this.client.get(`/api/notifications?page=${page}`);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async getUnreadNotificationCount() {
+    try {
+      const response = await this.client.get('/api/notifications/unread-count');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async getNotificationCountsByType() {
+    try {
+      const response = await this.client.get('/api/notifications/unread-counts-by-type');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async markNotificationsTypeRead(type: string) {
+    try {
+      const response = await this.client.patch(`/api/notifications/type/${type}/read`);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async markNotificationRead(id: number) {
+    try {
+      const response = await this.client.patch(`/api/notifications/${id}/read`);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async markAllNotificationsRead() {
+    try {
+      const response = await this.client.post('/api/notifications/mark-all-read');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
   async getMentors() {
     try {
       const response = await this.client.get('/api/mentorship/mentors');
@@ -226,6 +332,11 @@ class ApiClient {
     }
   }
 
+  getStorageUrl(path: string) {
+    const baseURL = secrets.backendEndpoint || 'http://localhost:8000';
+    return `${baseURL}/storage/${path}`;
+  }
+
   handleError(error: any) {
     if (error.response) {
       // Server responded with a status other than 2xx
@@ -238,7 +349,8 @@ class ApiClient {
       console.error('API Error:', error.message);
     }
 
-    toast.error(error.message || 'Something went wrong');
+    const errorMessage = error.response?.data?.message || error.message || 'Something went wrong';
+    toast.error(errorMessage);
   }
 }
 
