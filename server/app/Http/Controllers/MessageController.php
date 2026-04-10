@@ -6,6 +6,7 @@ use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\MentorshipRequest;
+use App\Models\JobApplication;
 
 class MessageController extends Controller
 {
@@ -37,15 +38,27 @@ class MessageController extends Controller
         ]);
 
        
-       $isAccepted = MentorshipRequest::where('mentee_id', auth()->id()) // student_id এর বদলে mentee_id
-    ->where('mentor_id', $request->receiver_id) // alumni_id এর বদলে mentor_id
-    ->where('status', 'accepted')
-    ->exists();
+        $isAcceptedMentorship = MentorshipRequest::where(function($q) use ($request) {
+            $q->where('mentee_id', auth()->id())->where('mentor_id', $request->receiver_id);
+        })->orWhere(function($q) use ($request) {
+            $q->where('mentor_id', auth()->id())->where('mentee_id', $request->receiver_id);
+        })->where('status', 'accepted')->exists();
 
-        
-        if (!$isAccepted) {
+        $isJobRelated = JobApplication::where(function($q) use ($request) {
+            $q->where('user_id', auth()->id()) // Sender is applicant
+              ->whereHas('jobPosting', function($pq) use ($request) {
+                  $pq->where('user_id', $request->receiver_id); // Receiver is recruiter
+              });
+        })->orWhere(function($q) use ($request) {
+            $q->where('user_id', $request->receiver_id) // Receiver is applicant
+              ->whereHas('jobPosting', function($pq) {
+                  $pq->where('user_id', auth()->id()); // Sender is recruiter
+              });
+        })->exists();
+
+        if (!$isAcceptedMentorship && !$isJobRelated) {
             return response()->json([
-                'message' => 'Must be accepted as a mentee to send messages.'
+                'message' => 'Unauthorized messaging. You must be connected via mentorship or a job application.'
             ], 403);
         }
        

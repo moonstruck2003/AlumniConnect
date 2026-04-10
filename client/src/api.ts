@@ -159,6 +159,52 @@ class ApiClient {
     }
   }
 
+  async applyToJob(jobId: number, formData: FormData) {
+    try {
+      const response = await this.client.post(`/api/jobs/${jobId}/apply`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      toast.success(response.data.message || 'Application submitted');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async getJobApplicants(jobId: number) {
+    try {
+      const response = await this.client.get(`/api/jobs/${jobId}/applicants`);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async updateApplicationStatus(applicationId: number, status: string) {
+    try {
+      const response = await this.client.patch(`/api/applications/${applicationId}/status`, { status });
+      toast.success(response.data.message || 'Status updated');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async getMyApplications() {
+    try {
+      const response = await this.client.get('/api/applications/me');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
   async getMentors() {
     try {
       const response = await this.client.get('/api/mentorship/mentors');
@@ -224,6 +270,11 @@ class ApiClient {
       this.handleError(error);
       throw error;
     }
+  }
+
+  getStorageUrl(path: string) {
+    const baseURL = secrets.backendEndpoint || 'http://localhost:8000';
+    return `${baseURL}/storage/${path}`;
   }
 
   handleError(error: any) {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, User as UserIcon, Loader2, MessageSquare, PlusCircle } from 'lucide-react';
+import { Send, User as UserIcon, Loader2, MessageSquare } from 'lucide-react';
 import ApiClient from '../api';
 import Navbar from '../components/Navbar';
 import './Messages.css';
@@ -49,6 +49,21 @@ export default function Messages() {
   useEffect(() => {
     fetchConversations();
   }, []);
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const targetUserId = queryParams.get('user');
+    
+    if (targetUserId && conversations.length > 0) {
+      const existingChat = conversations.find(c => Number(c.id) === Number(targetUserId));
+      if (existingChat) {
+        setActiveUser(existingChat);
+      } else {
+        // If not in conversations yet, we might need to fetch user details
+        // For now, let's try to find them if they was just added optimistically
+      }
+    }
+  }, [location, conversations]);
 
   useEffect(() => {
     if (activeUser) {
