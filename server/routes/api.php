@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\JobPostingController;
 use App\Http\Controllers\Api\JobApplicationController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PasswordResetController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\AiChatController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
@@ -72,6 +73,9 @@ Route::middleware(['jwt'])->group(function () {
 
     // AI Chatbot Route
     Route::post('/ai/chat', [AiChatController::class, 'chat']);
+
+    // Dashboard Stats Route
+    Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
 });
 
 Route::get('/session', [SessionController::class, 'getSession']);

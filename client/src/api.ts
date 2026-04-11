@@ -385,6 +385,16 @@ class ApiClient {
     }
   }
 
+  async getDashboardStats() {
+    try {
+      const response = await this.client.get('/api/dashboard/stats');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
   handleError(error: any) {
     if (error.response) {
       // Server responded with a status other than 2xx
