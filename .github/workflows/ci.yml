@@ -1,0 +1,54 @@
+name: CI Quality Gate (Laravel & React)
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test-backend:
+    name: Backend Check (PHP 8.4)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP Environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, pdo_mysql, xml
+          coverage: none
+
+      - name: Install Secure Dependencies
+        run: |
+          cd server
+          composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Verify Laravel Artisan
+        run: |
+          cd server
+          cp .env.example .env
+          php artisan key:generate
+          php artisan optimize:clear
+
+  test-frontend:
+    name: Frontend Check (React 18)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Verify Npm Install & Vite Build
+        env:
+          VITE_BACKEND_ENDPOINT: http://localhost:8000/api
+        run: |
+          cd client
+          npm install
+          npx vite build

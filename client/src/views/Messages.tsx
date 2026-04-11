@@ -67,31 +67,27 @@ export default function Messages() {
     }
   }, [location, conversations]);
 
-  useEffect(() => {
-    if (activeUser) {
-      fetchMessages(activeUser.id);
-      
-      // Polling for MVP real-time updates
-      const interval = setInterval(() => {
-        fetchMessages(activeUser.id, false);
-      }, 5000);
-      return () => clearInterval(interval);
-    }
-  }, [activeUser]);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   const fetchConversations = async () => {
     try {
       const data = await api.getConversations();
-      if (data) {
+      if (data && data.length > 0) {
         setConversations(data);
+        
+        // Handle auto-selection
+        const queryParams = new URLSearchParams(location.search);
+        const targetUserId = queryParams.get('user');
+        
+        // Case 1: Explicit target from URL
+        if (targetUserId) {
+           const target = data.find((c: any) => c.id === Number(targetUserId));
+           if (target) setActiveUser(target);
+        } 
+        // Case 2: No active user selected yet (load/refresh scenario)
+        else if (!activeUser) {
+           const lastId = localStorage.getItem('last_chat_user_id');
+           const savedUser = lastId ? data.find((c: any) => c.id === Number(lastId)) : null;
+           setActiveUser(savedUser || data[0]); // Fallback to most recent (data[0])
+        }
       }
     } catch (error) {
       console.error('Failed to fetch conversations', error);
@@ -99,6 +95,18 @@ export default function Messages() {
       setIsLoadingChats(false);
     }
   };
+
+  useEffect(() => {
+    if (activeUser) {
+      localStorage.setItem('last_chat_user_id', String(activeUser.id));
+      fetchMessages(activeUser.id);
+      
+      const interval = setInterval(() => {
+        fetchMessages(activeUser.id, false);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [activeUser]);
 
   const fetchMessages = async (userId: number, showLoading = true) => {
     if (showLoading) setIsLoadingMessages(true);

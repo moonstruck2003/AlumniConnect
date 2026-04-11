@@ -9,9 +9,11 @@ use App\Http\Controllers\Api\JobPostingController;
 use App\Http\Controllers\Api\JobApplicationController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PasswordResetController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\AiChatController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\EventController;
 
 
 /*
@@ -60,6 +62,10 @@ Route::middleware(['jwt'])->group(function () {
     Route::get('/messages/{userId}', [\App\Http\Controllers\MessageController::class, 'getConversation']);
     Route::post('/messages', [\App\Http\Controllers\MessageController::class, 'sendMessage']);
 
+    // Event Routes
+    Route::get('/events', [EventController::class, 'index']);
+    Route::post('/events', [EventController::class, 'store']);
+
     // Notification Routes
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
@@ -79,6 +85,9 @@ Route::middleware(['jwt'])->group(function () {
 
     // AI Chatbot Route
     Route::post('/ai/chat', [AiChatController::class, 'chat']);
+
+    // Dashboard Stats Route
+    Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
 });
 
 Route::get('/session', [SessionController::class, 'getSession']);
