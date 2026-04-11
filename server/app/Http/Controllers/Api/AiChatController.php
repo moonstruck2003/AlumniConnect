@@ -31,7 +31,7 @@ class AiChatController extends Controller
 
         try {
             // Endpoint for Gemini 1.5 Flash (Fast and accurate for chatbots)
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}";
+            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={$apiKey}";
 
             $prompt = [
                 'system_instruction' => [
