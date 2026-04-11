@@ -119,7 +119,6 @@ export default function AlumniProfile() {
   if (loading) {
     return (
       <div className="profile-page-container">
-        <Navbar activeItem="Profile" />
         <div className="profile-loading">
           <Loader size={32} className="spinner" />
           <span>Loading profile...</span>
@@ -131,7 +130,6 @@ export default function AlumniProfile() {
   if (error || !profile) {
     return (
       <div className="profile-page-container">
-        <Navbar activeItem="Profile" />
         <div className="profile-error">
           <span>{error || 'Could not load profile'}</span>
           <button className="retry-btn" onClick={fetchProfile}>
@@ -151,7 +149,6 @@ export default function AlumniProfile() {
 
   return (
     <div className="profile-page-container">
-      <Navbar activeItem="Profile" />
 
       <div className="profile-content">
         {/* Header */}
