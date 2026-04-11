@@ -27,6 +27,10 @@ class MentorshipController extends Controller
 
         $mentee = $request->user();
 
+        if ($mentee->role !== 'student') {
+            return response()->json(['message' => 'Only students are eligible to apply for mentorship.'], 403);
+        }
+
         // Check if a request already exists
         $existing = MentorshipRequest::where('mentor_id', $request->mentor_id)
             ->where('mentee_id', $mentee->id)
