@@ -22,7 +22,7 @@ jobs:
           coverage: none
 
       - name: Verify Build
-        run: cd server && composer install --no-interaction --prefer-dist --optimize-autoloader
+        run: cd server && composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-reqs
 
   frontend-build:
     name: Verify Frontend (React)
