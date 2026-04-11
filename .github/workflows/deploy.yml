@@ -54,12 +54,15 @@ jobs:
           echo "DB_DATABASE=laravel_test" >> .env
           echo "DB_USERNAME=root" >> .env
           echo "DB_PASSWORD=root" >> .env
+          echo "MAIL_MAILER=log" >> .env
+          echo "QUEUE_CONNECTION=sync" >> .env
+          echo "SESSION_DRIVER=array" >> .env
 
       - name: Generate application key
         run: cd server && php artisan key:generate
 
       - name: Generate JWT secret (CI Only)
-        run: cd server && php artisan jwt:secret --force
+        run: cd server && php artisan jwt:secret --no-interaction
 
       - name: Inject temporary test infrastructure (CI ENVIRONMENT ONLY)
         run: |
