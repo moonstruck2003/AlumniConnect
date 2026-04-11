@@ -257,7 +257,7 @@ export default function AlumniDirectory() {
                                     ))}
                                 </div>
 
-                            <button className="btn-view-profile" onClick={() => window.location.href = `/profile/view/${alumni.id}`}>
+                            <button className="btn-view-profile" onClick={() => window.location.href = `/profile/${alumni.id}`}>
                                 View Profile
                             </button>
                         </motion.div>

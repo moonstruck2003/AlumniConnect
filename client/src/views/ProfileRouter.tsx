@@ -1,18 +1,21 @@
+import { useParams } from 'react-router';
 import { useAuth } from '../context/AuthContext';
 import AlumniProfile from './AlumniProfile';
 import RecruiterProfile from './RecruiterProfile';
-import './AlumniProfile.css'; // ensure the base styles are loaded for the fallback
-
 import StudentProfile from './StudentProfile';
+import './AlumniProfile.css'; 
 
 export default function ProfileRouter() {
-  const { user } = useAuth();
+  const { user: currentUser } = useAuth();
+  const { id } = useParams();
   
-  if (!user) {
+  if (!currentUser && !id) {
     return null;
   }
 
-  const role = (user.role as string) || 'alumni';
+  // If viewing someone else, we might need their specific role component.
+  // For now, let's assume we can pass the ID to these components.
+  const role = id ? 'alumni' : ((currentUser?.role as string) || 'alumni');
 
   if (role === 'alumni') {
     return <AlumniProfile />;
