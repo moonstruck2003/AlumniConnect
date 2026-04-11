@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Lock, ArrowRight, BookOpen, Key } from 'lucide-react';
+import { Lock, ArrowRight, Key } from 'lucide-react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import ApiClient from '../api';
 import './Login.css';

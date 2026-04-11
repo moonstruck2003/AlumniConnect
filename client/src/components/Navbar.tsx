@@ -123,6 +123,14 @@ export default function Navbar({ activeItem = 'Dashboard' }: NavbarProps) {
 
                 {isAuthenticated ? (
                     <div className="nav-auth">
+                        <Link to="/messages" className={`nav-item ${activeItem === 'Messages' ? 'active' : ''}`}>
+                            <div className="nav-icon-badge-wrapper">
+                                <MessageSquare size={18} />
+                                {countsByType.message > 0 && <span className="nav-badge-small">{countsByType.message}</span>}
+                            </div>
+                            Messages
+                        </Link>
+                        <Link to="/profile" className={`nav-item ${activeItem === 'Profile' ? 'active' : ''}`}><UserIcon size={18} /> Profile</Link>
                         <button type="button" onClick={handleLogout} className="btn-logout">
                             <LogOut size={18} /> Logout
                         </button>

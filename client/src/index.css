@@ -13,6 +13,12 @@
   --card-border: rgba(255, 255, 255, 0.05);
 }
 
+.global-container {
+  max-width: 1536px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
 body {
   margin: 0;
   background-color: var(--bg-dark);

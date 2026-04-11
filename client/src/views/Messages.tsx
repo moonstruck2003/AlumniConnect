@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, User as UserIcon, Loader2, MessageSquare } from 'lucide-react';
 import ApiClient from '../api';
-import Navbar from '../components/Navbar';
 import './Messages.css';
 import { useAuth } from '../context/AuthContext';
 import { useLocation } from 'react-router-dom';
@@ -154,8 +153,7 @@ export default function Messages() {
   };
 
   return (
-    <div className="messages-page-wrapper">
-      <Navbar activeItem="Messages" />
+    <div className="messages-page-wrapper" style={{ paddingTop: '0' }}>
       
       <div className="messages-container">
         <motion.div 
