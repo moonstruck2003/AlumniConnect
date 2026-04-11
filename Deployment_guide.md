@@ -45,26 +45,47 @@ Railway will spin up a secure instance and give you variables like `MYSQLHOST`, 
 Click **+ New Service → Empty Service** (Do not deploy directly from GitHub inside the Railway UI! We want GitHub Actions to control this). Name it `alumniconnect-app`.
 
 **2.4 — Bind Environment Variables to the App Service:**
-Click on your `alumniconnect-app` service → **Variables** tab. Add your production secrets and link the database dynamically using Railway's reference variables:
-```
+Click on your `alumniconnect-app` service → **Variables** tab. Add your production secrets and link the database explicitly using the exact values from your MySQL service.
+
+*Note: You will skip `APP_URL` and `FRONTEND_URL` for now!*
+
+Paste this exactly into the "Raw Editor" inside the Variables tab:
+```env
 APP_NAME=AlumniConnect
 APP_ENV=production
-APP_KEY=         (Paste your local base64 key)
 APP_DEBUG=false
-APP_URL=         (Fill this in after generating a Railway Domain)
-FRONTEND_URL=    (Fill this in after generating a Railway Domain)
+APP_KEY=base64:yin91sTYMLF5tNmMBaZLepwwqEmuZQJqPAGO1C4iQvE=
 
 DB_CONNECTION=mysql
-DB_HOST=${{MySQL.MYSQLHOST}}
-DB_PORT=${{MySQL.MYSQLPORT}}
-DB_DATABASE=${{MySQL.MYSQLDATABASE}}
-DB_USERNAME=${{MySQL.MYSQLUSER}}
-DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}
+DB_HOST=${{RAILWAY_PRIVATE_DOMAIN}}
+DB_PORT=3306
+DB_DATABASE=railway
+DB_USERNAME=root
+DB_PASSWORD=kacWpBUuDDTiuTQYKYeLEloYQFcDQEsL
 
+JWT_SECRET=PkV7KutztMNEavLSpcXsnd7hCHeQUG4ypx4Y7oHhZfcqA0MWczgPKdb5pQ2w3EyK
 GEMINI_API_KEY=AIzaSyByY5RqrMkqVFN753qLjK4UpfECXZmOKzY
+
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=admin.alumniconnect@gmail.com
+MAIL_PASSWORD=zsatbbnpramykmzc
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="admin.alumniconnect@gmail.com"
+MAIL_FROM_NAME="ALUMNI CONNECT"
 ```
 
-**2.5 — Get Your Credentials For GitHub Actions:**
+**2.5 — Generate Domain (Post-Deployment):**
+Because you are setting up an Empty Service, Railway requires actual code to be deployed before it can generate a domain. 
+1. Leave `APP_URL` and `FRONTEND_URL` blank for now.
+2. Complete Step 3 and push your code to `main`.
+3. Once the deployment finishes, go to the **Settings** tab of `alumniconnect-app`.
+4. Click **Generate Domain**.
+5. Copy the generated URL and add it back into the **Variables** tab as `APP_URL` and `FRONTEND_URL`.
+
+
+**2.6 — Get Your Credentials For GitHub Actions:**
 1. **RAILWAY_TOKEN**: Go to Account Settings → Tokens → Create Token.
 2. **SERVICE & PROJECT ID**: Go to your `alumniconnect-app` service → Settings. Copy the `Service ID` and `Project ID`.
 
