@@ -27,7 +27,11 @@ WORKDIR /var/www
 COPY . .
 
 # Install PHP dependencies (no dev)
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN php -d memory_limit=-1 /usr/bin/composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction \
+    --ignore-platform-reqs
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www \
