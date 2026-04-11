@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { User, Building2, Linkedin, FileText, Loader, Briefcase, CheckCircle, XCircle, Edit2, Save, X } from 'lucide-react';
+import { User, Building2, Linkedin, FileText, Loader, Briefcase, CheckCircle, XCircle, Edit2, Save, X, ShieldX } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import ApiClient from '../api';
 import './RecruiterProfile.css';
@@ -15,6 +15,7 @@ interface ProfileData {
   short_bio: string | null;
   company: string | null;
   job_title: string | null;
+  is_verified: boolean;
 }
 
 export default function RecruiterProfile() {
@@ -153,7 +154,20 @@ export default function RecruiterProfile() {
               onChange={handleInputChange} 
             />
           ) : (
-            <h1 className="profile-name">{profile.name}</h1>
+            <div className="flex items-center gap-2">
+                <h1 className="profile-name">{profile.name}</h1>
+                {profile.is_verified ? (
+                    <div className="verified-badge-main" title="Verified Account">
+                        <CheckCircle size={20} fill="#10b981" color="white" />
+                        <span className="verified-text">Verified</span>
+                    </div>
+                ) : (
+                    <div className="unverified-badge-main" title="Verification Pending">
+                        <ShieldX size={20} className="text-slate-500" />
+                        <span className="unverified-text">Unverified</span>
+                    </div>
+                )}
+            </div>
           )}
           
           <span className="profile-role-badge">{profile.role}</span>

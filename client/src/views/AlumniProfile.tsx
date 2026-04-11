@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useAuth } from '../context/AuthContext';
-import { User, Briefcase, Linkedin, FileText, Loader, GraduationCap, Edit2, Save, X } from 'lucide-react';
+import { User, Briefcase, Linkedin, FileText, Loader, GraduationCap, Edit2, Save, X, CheckCircle, ShieldX } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import ApiClient from '../api';
 import './AlumniProfile.css';
@@ -20,6 +20,7 @@ interface ProfileData {
   student_id: string | null;
   cgpa: string | null;
   is_accepting_mentees: boolean;
+  is_verified: boolean;
 }
 
 export default function AlumniProfile() {
@@ -164,7 +165,20 @@ export default function AlumniProfile() {
               onChange={handleInputChange} 
             />
           ) : (
-            <h1 className="profile-name">{profile.name}</h1>
+            <div className="flex items-center gap-2">
+                <h1 className="profile-name">{profile.name}</h1>
+                {profile.is_verified ? (
+                    <div className="verified-badge-main" title="Verified Account">
+                        <CheckCircle size={20} fill="#10b981" color="white" />
+                        <span className="verified-text">Verified</span>
+                    </div>
+                ) : (
+                    <div className="unverified-badge-main" title="Verification Pending">
+                        <ShieldX size={20} className="text-slate-500" />
+                        <span className="unverified-text">Unverified</span>
+                    </div>
+                )}
+            </div>
           )}
           <span className="profile-role-badge">{profile.role}</span>
           

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import {
     Users, Briefcase, Calendar, User as UserIcon,
-    BookOpen, LayoutDashboard, Menu, X, Info, LogOut, MessageSquare
+    BookOpen, LayoutDashboard, Menu, X, Info, LogOut, MessageSquare, Shield
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import ApiClient from '../api';
@@ -11,12 +11,12 @@ import './Navbar.css';
 import { useEffect } from 'react';
 
 interface NavbarProps {
-    activeItem?: 'Dashboard' | 'Alumni Directory' | 'Mentorship' | 'Jobs & Internships' | 'Events' | 'About Us' | 'Profile' | 'Messages';
+    activeItem?: 'Dashboard' | 'Alumni Directory' | 'Mentorship' | 'Jobs & Internships' | 'Events' | 'About Us' | 'Profile' | 'Messages' | 'Admin';
 }
 
 export default function Navbar({ activeItem = 'Dashboard' }: NavbarProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const { isAuthenticated, logout } = useAuth();
+    const { isAuthenticated, logout, user } = useAuth();
     const [countsByType, setCountsByType] = useState<{[key: string]: number}>({
         message: 0,
         job_application: 0,
@@ -114,6 +114,9 @@ export default function Navbar({ activeItem = 'Dashboard' }: NavbarProps) {
                                 Messages
                             </Link>
                             <Link to="/profile" className={`nav-item ${activeItem === 'Profile' ? 'active' : ''}`}><UserIcon size={18} /> Profile</Link>
+                            {user?.role === 'admin' && (
+                                <Link to="/admin/dashboard" className={`nav-item ${activeItem === 'Admin' ? 'active' : ''}`}><Shield size={18} /> Admin Console</Link>
+                            )}
                         </>
                     )}
                 </div>
