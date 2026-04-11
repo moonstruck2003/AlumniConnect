@@ -13,9 +13,11 @@ class AddIsAcceptingMenteesToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_accepting_mentees')->default(true);
-        });
+        if (!Schema::hasColumn('users', 'is_accepting_mentees')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->boolean('is_accepting_mentees')->default(true);
+            });
+        }
     }
 
     /**

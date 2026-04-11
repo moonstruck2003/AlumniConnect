@@ -14,10 +14,10 @@ class AddAlumniFieldsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('location')->nullable();
-            $table->string('graduation_year')->nullable();
-            $table->string('industry')->nullable();
-            $table->json('skills')->nullable();
+            if (!Schema::hasColumn('users', 'location')) $table->string('location')->nullable();
+            if (!Schema::hasColumn('users', 'graduation_year')) $table->string('graduation_year')->nullable();
+            if (!Schema::hasColumn('users', 'industry')) $table->string('industry')->nullable();
+            if (!Schema::hasColumn('users', 'skills')) $table->json('skills')->nullable();
         });
     }
 

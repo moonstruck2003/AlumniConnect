@@ -1,53 +1,93 @@
-name: CI Quality Gate
+name: Laravel + React CI/CD → Railway
 
 on:
   push:
-    branches: [ "main", "dev" ]
+    branches:
+      - main
+      - feature/ci-fix-userfactory
   pull_request:
-    branches: [ "main", "dev" ]
+    branches:
+      - main
 
 jobs:
-  test-backend:
-    name: Backend Check (PHP 8.4)
+  test:
+    name: Run Laravel Tests
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: laravel_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup PHP Environment
+      - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
           extensions: mbstring, pdo, pdo_mysql, xml, bcmath, ctype, fileinfo, curl
           coverage: none
 
-      - name: Install Dependencies
+      - name: Install Composer dependencies
+        run: cd server && composer install --optimize-autoloader --no-interaction
+
+      - name: Copy .env for testing
+        run: cd server && cp .env.example .env
+
+      - name: Set test environment variables
         run: |
           cd server
-          composer install --no-interaction --prefer-dist --optimize-autoloader
+          echo "APP_KEY=" >> .env
+          echo "DB_CONNECTION=mysql" >> .env
+          echo "DB_HOST=127.0.0.1" >> .env
+          echo "DB_PORT=3306" >> .env
+          echo "DB_DATABASE=laravel_test" >> .env
+          echo "DB_USERNAME=root" >> .env
+          echo "DB_PASSWORD=root" >> .env
+          echo "MAIL_MAILER=log" >> .env
+          echo "QUEUE_CONNECTION=sync" >> .env
+          echo "SESSION_DRIVER=array" >> .env
 
-      - name: Verify Laravel
-        run: |
-          cd server
-          cp .env.example .env
-          php artisan key:generate
-          php artisan jwt:secret --no-interaction
-          php artisan optimize:clear
+      - name: Generate application key
+        run: cd server && php artisan key:generate
 
-  test-frontend:
-    name: Frontend Check (React 18)
+      - name: Generate JWT secret (CI Only)
+        run: cd server && php artisan jwt:secret --no-interaction
+
+      - name: Prepare database for testing
+        run: cd server && php artisan migrate:fresh --force
+
+      - name: Run tests (PHPUnit)
+        run: cd server && php artisan test
+
+  deploy:
+    name: Deploy to Railway
     runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+      - name: Install Railway CLI
+        run: curl -fsSL https://railway.app/install.sh | bash
 
-      - name: Build Frontend
+      - name: Deploy to Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          cd client
-          npm install
-          npm run build
+          railway up \
+            --service ${{ secrets.RAILWAY_SERVICE_ID }} \
+            --detach
