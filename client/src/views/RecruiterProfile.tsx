@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { User, Building2, Linkedin, FileText, Loader, Briefcase, CheckCircle, XCircle, Edit2, Save, X } from 'lucide-react';
-import Navbar from '../components/Navbar';
 import ApiClient from '../api';
 import './RecruiterProfile.css';
 import toast from 'react-hot-toast';
@@ -106,7 +105,6 @@ export default function RecruiterProfile() {
   if (loading) {
     return (
       <div className="profile-page-container">
-        <Navbar activeItem="Profile" />
         <div className="profile-loading">
           <Loader size={32} className="spinner" />
           <span>Loading profile...</span>
@@ -118,7 +116,6 @@ export default function RecruiterProfile() {
   if (error || !profile) {
     return (
       <div className="profile-page-container">
-        <Navbar activeItem="Profile" />
         <div className="profile-error">
           <span>{error || 'Could not load profile'}</span>
           <button className="retry-btn" onClick={fetchProfile}>
@@ -138,7 +135,6 @@ export default function RecruiterProfile() {
 
   return (
     <div className="profile-page-container">
-      <Navbar activeItem="Profile" />
 
       <div className="profile-content">
         {/* Header */}

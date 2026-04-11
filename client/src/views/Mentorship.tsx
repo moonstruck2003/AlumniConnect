@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Search, Filter, MapPin, Award, Loader, MessageSquare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
 import ApiClient from '../api';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
@@ -94,8 +93,7 @@ export default function Mentorship() {
   );
 
   return (
-    <div className="mentorship-page-container">
-      <Navbar activeItem="Mentorship" />
+    <div className="mentorship-page-container" style={{ paddingTop: '0' }}>
       <div className="page-header">
         <h1 className="page-title">Mentorship Program</h1>
         <p className="page-subtitle">Find a mentor or review your mentorship requests</p>

@@ -1,4 +1,3 @@
-import Navbar from './components/Navbar';
 import './About.css';
 
 export default function About() {
@@ -32,7 +31,6 @@ export default function About() {
 
   return (
     <div className="about-page-container">
-      <Navbar activeItem="About Us" />
       <div className="about-hero-section">
         <h1>About AlumniConnect</h1>
         <p>Empowering graduates to connect, grow, and succeed together beyond the university campus.</p>

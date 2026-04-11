@@ -1,11 +1,10 @@
+import { useState, useEffect } from "react";
 import { motion } from 'framer-motion';
 import {
   Users, TrendingUp, Briefcase, Calendar,
   ArrowRight
 } from 'lucide-react';
-import Navbar from '../components/Navbar';
 import './Dashboard.css';
-import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApiClient from '../api';
 
@@ -53,10 +52,7 @@ export default function Dashboard() {
 
   return (
     <div className="home-page">
-      <div className="home-container">
-
-        {/* Navigation Bar */}
-        <Navbar activeItem="Dashboard" />
+      <div className="home-container" style={{ paddingTop: '0' }}>
 
         {/* Hero Section */}
         <motion.div
@@ -109,7 +105,7 @@ export default function Dashboard() {
           >
             <h3 className="section-title">Recent Activity</h3>
             <div className="activity-list">
-              {activities.map((item, idx) => (
+              {activities.map((item: any, idx: number) => (
                 <div key={idx} className="activity-item">
                   <div className={`activity-avatar ${item.color}`}>
                     {item.avatar}

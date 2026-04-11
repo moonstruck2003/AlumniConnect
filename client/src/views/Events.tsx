@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Calendar, MapPin, Clock, Plus, X, Star, ArrowRight, Users, Info } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+import { Search, Calendar, MapPin, Clock, Plus, X, Star, ArrowRight } from 'lucide-react';
 import ApiClient from '../api';
 import './Events.css';
 
@@ -32,7 +30,6 @@ export default function Events() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
 
-  const navigate = useNavigate();
   const api = new ApiClient();
 
   const handlePropose = async (e: React.FormEvent) => {
@@ -129,8 +126,7 @@ export default function Events() {
   };
 
   return (
-    <div className="events-main-wrapper">
-      <Navbar activeItem="Events" />
+    <div className="events-main-wrapper" style={{ paddingTop: '0' }}>
       
       <div className="events-page-header">
         <div className="header-text-group">

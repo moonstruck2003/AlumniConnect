@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { User, Briefcase, Linkedin, FileText, Loader, GraduationCap, Edit2, Save, X } from 'lucide-react';
-import Navbar from '../components/Navbar';
 import ApiClient from '../api';
 import './AlumniProfile.css'; // Reusing the same beautiful dark theme CSS
 import toast from 'react-hot-toast';
@@ -88,7 +87,6 @@ export default function StudentProfile() {
   if (loading) {
     return (
       <div className="profile-page-container">
-        <Navbar activeItem="Profile" />
         <div className="profile-loading">
           <Loader size={32} className="spinner" />
           <span>Loading profile...</span>
@@ -100,7 +98,6 @@ export default function StudentProfile() {
   if (error || !profile) {
     return (
       <div className="profile-page-container">
-        <Navbar activeItem="Profile" />
         <div className="profile-error">
           <span>{error || 'Could not load student profile'}</span>
           <button className="retry-btn" onClick={fetchProfile}>
@@ -120,7 +117,6 @@ export default function StudentProfile() {
 
   return (
     <div className="profile-page-container">
-      <Navbar activeItem="Profile" />
 
       <div className="profile-content">
         {/* Header */}

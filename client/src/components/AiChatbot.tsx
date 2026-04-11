@@ -5,22 +5,22 @@ import './AiChatbot.css';
 
 interface Message {
   id: string;
-  text: string;
   sender: 'user' | 'bot';
+  text: string;
   timestamp: Date;
 }
 
-const AiChatbot: React.FC = () => {
+export const AiChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Hi! I'm your AlumniConnect assistant. How can I help you today?",
       sender: 'bot',
-      timestamp: new Date(),
-    },
+      text: 'Hello! I am your AlumniConnect Assistant. How can I help you today?',
+      timestamp: new Date()
+    }
   ]);
-  const [inputValue, setInputValue] = useState('');
+  const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -29,115 +29,111 @@ const AiChatbot: React.FC = () => {
   };
 
   useEffect(() => {
-    if (isOpen) {
-      scrollToBottom();
-    }
-  }, [messages, isOpen]);
+    scrollToBottom();
+  }, [messages]);
 
-  const handleSend = async () => {
-    if (!inputValue.trim() || isLoading) return;
+  const handleSend = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
 
-    const userMsg: Message = {
+    const userMessage: Message = {
       id: Date.now().toString(),
-      text: inputValue,
       sender: 'user',
-      timestamp: new Date(),
+      text: input,
+      timestamp: new Date()
     };
 
-    setMessages((prev) => [...prev, userMsg]);
-    setInputValue('');
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
     setIsLoading(true);
 
     try {
       const api = new ApiClient();
-      const response = await api.chatWithAi(inputValue);
-
-      if (response && response.success) {
-        const botMsg: Message = {
-          id: (Date.now() + 1).toString(),
-          text: response.data,
-          sender: 'bot',
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, botMsg]);
-      } else {
-        throw new Error('Failed to get AI response');
-      }
-    } catch (error) {
-      const errorMsg: Message = {
+      const response = await api.chatWithAi(input);
+      
+      const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: "I'm sorry, I'm having trouble connecting right now. Please try again later.",
         sender: 'bot',
-        timestamp: new Date(),
+        text: response.reply || 'Sorry, I couldn\'t process that.',
+        timestamp: new Date()
       };
-      setMessages((prev) => [...prev, errorMsg]);
+      
+      setMessages(prev => [...prev, botMessage]);
+    } catch (err) {
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        sender: 'bot',
+        text: 'I am sorry, I am having trouble connecting right now.',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSend();
-    }
-  };
-
   return (
-    <div className="ai-chatbot-container">
-      {isOpen ? (
-        <div className="chat-window">
-          <div className="chat-header">
-            <div className="header-info">
+    <>
+      <button 
+        className={`chatbot-trigger ${isOpen ? 'active' : ''}`}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {isOpen ? <X /> : <MessageSquare />}
+      </button>
+
+      {isOpen && (
+        <div className="chatbot-window">
+          <div className="chatbot-header">
+            <div className="bot-info">
               <div className="bot-avatar">
-                <Bot size={22} color="white" />
+                <Bot size={20} />
               </div>
               <div>
-                <h3>AlumniBot AI</h3>
+                <h3>Network AI</h3>
+                <span>Always online</span>
               </div>
             </div>
-            <button className="close-btn" onClick={() => setIsOpen(false)} aria-label="Close chat">
-              <X size={18} />
-            </button>
+            <button onClick={() => setIsOpen(false)}><X size={18} /></button>
           </div>
 
-          <div className="chat-messages">
-            {messages.map((msg) => (
-              <div key={msg.id} className={`message ${msg.sender}`}>
-                {msg.text}
+          <div className="chatbot-messages">
+            {messages.map(msg => (
+              <div key={msg.id} className={`message-bubble ${msg.sender}`}>
+                <div className="message-icon">
+                  {msg.sender === 'bot' ? <Bot size={14} /> : <User size={14} />}
+                </div>
+                <div className="message-text">
+                  <p>{msg.text}</p>
+                </div>
               </div>
             ))}
             {isLoading && (
-              <div className="message bot">
+              <div className="message-bubble bot">
+                <div className="message-icon">
+                  <Bot size={14} />
+                </div>
                 <div className="typing-indicator">
-                  <span></span>
-                  <span></span>
-                  <span></span>
+                  <span></span><span></span><span></span>
                 </div>
               </div>
             )}
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="chat-input-area">
-            <input
-              type="text"
-              placeholder="Ask anything..."
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
-              disabled={isLoading}
+          <form className="chatbot-input" onSubmit={handleSend}>
+            <input 
+              type="text" 
+              placeholder="Ask me anything..." 
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
             />
-            <button className="send-btn" onClick={handleSend} disabled={isLoading || !inputValue.trim()}>
+            <button type="submit" disabled={!input.trim() || isLoading}>
               <Send size={18} />
             </button>
-          </div>
+          </form>
         </div>
-      ) : (
-        <button className="chatbot-bubble" onClick={() => setIsOpen(true)}>
-          <MessageSquare size={28} color="white" />
-        </button>
       )}
-    </div>
+    </>
   );
 };
 

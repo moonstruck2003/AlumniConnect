@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Search, Briefcase, MapPin, Clock, Plus, Mail, Phone, ExternalLink, X, FileText, Download, CheckCircle, XCircle, MessageCircle, Award } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import { useAuth } from '../context/AuthContext';
 import ApiClient from '../api';
+import { useAuth } from '../context/AuthContext';
 import './Jobs.css';
 
 interface Job {
@@ -202,8 +201,7 @@ export default function Jobs() {
   };
 
   return (
-    <div className="jobs-page-container">
-      <Navbar activeItem="Jobs & Internships" />
+    <div className="jobs-page-container" style={{ paddingTop: '0' }}>
       <div className="page-header">
         <h1 className="page-title">Jobs & Internships</h1>
         <p className="page-subtitle">Discover career opportunities from our alumni network</p>
