@@ -365,6 +365,16 @@ class ApiClient {
     }
   }
 
+  async chatWithAi(message: string) {
+    try {
+      const response = await this.client.post('/api/ai/chat', { message });
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
   async resetPassword(data: any) {
     try {
       const response = await this.client.post('/api/reset-password', data);

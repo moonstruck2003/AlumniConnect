@@ -18,6 +18,8 @@ import Mentorship from './views/Mentorship';
 import Jobs from './views/Jobs';
 import ProfileRouter from './views/ProfileRouter';
 import ProtectedRoute from './components/ProtectedRoute';
+import AiChatbot from './components/AiChatbot';
+import { useAuth } from './context/AuthContext';
 
 function App() {
   return (
@@ -58,6 +60,7 @@ function App() {
           },
         }}
       />
+      {isAuthenticated && <AiChatbot />}
     </>
   );
 }
