@@ -355,6 +355,26 @@ class ApiClient {
     return `${baseURL}/storage/${path}`;
   }
 
+  async forgotPassword(email: string) {
+    try {
+      const response = await this.client.post('/api/forgot-password', { email });
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async resetPassword(data: any) {
+    try {
+      const response = await this.client.post('/api/reset-password', data);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
   handleError(error: any) {
     if (error.response) {
       // Server responded with a status other than 2xx
