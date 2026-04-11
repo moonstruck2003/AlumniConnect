@@ -33,9 +33,8 @@ class AiChatController extends Controller
             // Endpoint for Gemini 1.5 Flash (Fast and accurate for chatbots)
             $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}";
 
-            // Constructing the payload with System Instructions and Generation Config
             $prompt = [
-                'systemInstruction' => [
+                'system_instruction' => [
                     'parts' => [
                         [
                             'text' => "You are 'AlumniBot', the high-end official AI assistant for the 'AlumniConnect' platform. 
