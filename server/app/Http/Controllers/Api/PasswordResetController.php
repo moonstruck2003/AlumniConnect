@@ -41,31 +41,32 @@ class PasswordResetController extends Controller
         $frontendUrl = env('FRONTEND_URL', 'http://localhost:5173');
         $resetUrl = $frontendUrl . "/reset-password?token=" . $token . "&email=" . urlencode($request->email);
 
-        Mail::send([], [], function ($message) use ($request, $resetUrl) {
+        $htmlContent = "
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #ffffff;'>
+                <h2 style='color: #10b981; text-align: center;'>Reset Your Password</h2>
+                <p style='color: #4a5568; font-size: 16px; line-height: 1.6;'>
+                    You are receiving this email because we received a password reset request for your account.
+                </p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='{$resetUrl}' style='background-color: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;'>Reset Password</a>
+                </div>
+                <p style='color: #4a5568; font-size: 14px; line-height: 1.6;'>
+                    This password reset link will expire in 60 minutes.
+                </p>
+                <p style='color: #4a5568; font-size: 14px; line-height: 1.6;'>
+                    If you did not request a password reset, no further action is required.
+                </p>
+                <hr style='border: 0; border-top: 1px solid #e0e0e0; margin: 20px 0;'>
+                <p style='color: #718096; font-size: 12px; text-align: center;'>
+                    If you're having trouble clicking the \"Reset Password\" button, copy and paste the URL below into your web browser: <br>
+                    <span style='word-break: break-all; color: #10b981;'>{$resetUrl}</span>
+                </p>
+            </div>
+        ";
+
+        Mail::html($htmlContent, function ($message) use ($request) {
             $message->to($request->email)
-                ->subject('Reset Password Notification')
-                ->html("
-                    <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #ffffff;'>
-                        <h2 style='color: #10b981; text-align: center;'>Reset Your Password</h2>
-                        <p style='color: #4a5568; font-size: 16px; line-height: 1.6;'>
-                            You are receiving this email because we received a password reset request for your account.
-                        </p>
-                        <div style='text-align: center; margin: 30px 0;'>
-                            <a href='{$resetUrl}' style='background-color: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;'>Reset Password</a>
-                        </div>
-                        <p style='color: #4a5568; font-size: 14px; line-height: 1.6;'>
-                            This password reset link will expire in 60 minutes.
-                        </p>
-                        <p style='color: #4a5568; font-size: 14px; line-height: 1.6;'>
-                            If you did not request a password reset, no further action is required.
-                        </p>
-                        <hr style='border: 0; border-top: 1px solid #e0e0e0; margin: 20px 0;'>
-                        <p style='color: #718096; font-size: 12px; text-align: center;'>
-                            If you're having trouble clicking the \"Reset Password\" button, copy and paste the URL below into your web browser: <br>
-                            <span style='word-break: break-all; color: #10b981;'>{$resetUrl}</span>
-                        </p>
-                    </div>
-                ");
+                ->subject('Reset Password Notification');
         });
 
         return response()->json(['message' => 'We have emailed your password reset link!'], 200);
