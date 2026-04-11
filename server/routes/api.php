@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\MentorshipController;
 use App\Http\Controllers\Api\JobPostingController;
 use App\Http\Controllers\Api\JobApplicationController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
@@ -23,6 +24,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 */
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
+Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']);
 
 Route::middleware(['jwt'])->group(function () {
     Route::get('/user', function (Request $request) {

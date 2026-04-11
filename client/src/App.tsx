@@ -10,6 +10,8 @@ import Messages from './views/Messages';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import { Toaster } from 'react-hot-toast';
+import ForgotPassword from './views/ForgotPassword';
+import ResetPassword from './views/ResetPassword';
 import Sessions from './views/Sessions';
 import Events from './views/Events';
 import Mentorship from './views/Mentorship';
@@ -22,6 +24,8 @@ function App() {
     <>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/" element={<Home />} />
 
