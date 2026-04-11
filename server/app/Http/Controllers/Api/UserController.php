@@ -53,6 +53,10 @@ class UserController extends Controller
             'email' => 'sometimes|string|email|unique:users,email,'.$user->id,
             'linkedin_url' => 'nullable|url',
             'is_accepting_mentees' => 'sometimes|boolean',
+            'location' => 'nullable|string',
+            'graduation_year' => 'nullable|string',
+            'industry' => 'nullable|string',
+            'skills' => 'nullable|array',
         ]);
 
         if ($validator->fails()) {
@@ -61,12 +65,19 @@ class UserController extends Controller
 
         $user->update($request->only([
             'name', 'email', 'linkedin_url', 'short_bio', 'job_title', 
-            'company', 'department', 'student_id', 'cgpa', 'is_accepting_mentees'
+            'company', 'department', 'student_id', 'cgpa', 'is_accepting_mentees',
+            'location', 'graduation_year', 'industry', 'skills'
         ]));
 
         return response()->json([
             'message' => 'Profile updated successfully',
             'user' => $user
         ]);
+    }
+
+    public function alumni()
+    {
+        $alumni = User::where('role', 'alumni')->get();
+        return response()->json(['alumni' => $alumni]);
     }
 }

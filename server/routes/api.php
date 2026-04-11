@@ -62,6 +62,9 @@ Route::middleware(['jwt'])->group(function () {
     Route::patch('/notifications/type/{type}/read', [NotificationController::class, 'markTypeAsRead']);
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
+
+    // Alumni Directory
+    Route::get('/alumni', [UserController::class, 'alumni']);
 });
 
 Route::get('/session', [SessionController::class, 'getSession']);

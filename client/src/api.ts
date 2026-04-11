@@ -274,6 +274,15 @@ class ApiClient {
     }
   }
 
+  async getAlumni() {
+    try {
+      const response = await this.client.get('/api/alumni');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
   async requestMentorship(mentor_id: number, message: string) {
     try {
       const response = await this.client.post('/api/mentorship/requests', { mentor_id, message });
