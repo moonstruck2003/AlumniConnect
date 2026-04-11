@@ -54,7 +54,8 @@ export default function Signup() {
         };
 
         try {
-            const response = await fetch('http://localhost:8000/api/users', {
+            const API_BASE = import.meta.env.VITE_BACKEND_ENDPOINT || 'http://localhost:8000';
+            const response = await fetch(`${API_BASE}/api/users`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
