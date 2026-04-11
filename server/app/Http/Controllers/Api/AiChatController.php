@@ -35,7 +35,7 @@ class AiChatController extends Controller
 
             // Constructing the payload with System Instructions and Generation Config
             $prompt = [
-                'system_instruction' => [
+                'systemInstruction' => [
                     'parts' => [
                         [
                             'text' => "You are 'AlumniBot', the high-end official AI assistant for the 'AlumniConnect' platform. 
@@ -76,6 +76,7 @@ class AiChatController extends Controller
                 ],
                 'contents' => [
                     [
+                        'role' => 'user',
                         'parts' => [
                             ['text' => $userMessage]
                         ]
@@ -106,7 +107,7 @@ class AiChatController extends Controller
             Log::error('Gemini API Error: ' . $response->body());
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to get response from AI.'
+                'message' => 'Failed to get response from AI. Google said: ' . $response->body()
             ], 500);
 
         } catch (\Exception $e) {
