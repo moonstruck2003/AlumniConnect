@@ -106,6 +106,27 @@ class ApiClient {
     }
   }
 
+  // Admin Methods
+  async getAdminUsers() {
+    try {
+      const response = await this.client.get('/api/admin/users');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async toggleUserVerification(id: number) {
+    try {
+      const response = await this.client.patch(`/api/admin/users/${id}/verify`);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
   async getUserProfile(id: number | string) {
     try {
       const response = await this.client.get(`/api/users/${id}`);
