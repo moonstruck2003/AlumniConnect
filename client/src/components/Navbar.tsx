@@ -104,20 +104,8 @@ export default function Navbar({ activeItem = 'Dashboard' }: NavbarProps) {
                     </Link>
 
                     <Link to="/about" className={`nav-item ${activeItem === 'About Us' ? 'active' : ''}`}><Info size={18} /> About Us</Link>
-                    {isAuthenticated && (
-                        <>
-                            <Link to="/messages" className={`nav-item ${activeItem === 'Messages' ? 'active' : ''}`}>
-                                <div className="nav-icon-badge-wrapper">
-                                    <MessageSquare size={18} />
-                                    {countsByType.message > 0 && <span className="nav-badge-small">{countsByType.message}</span>}
-                                </div>
-                                Messages
-                            </Link>
-                            <Link to="/profile" className={`nav-item ${activeItem === 'Profile' ? 'active' : ''}`}><UserIcon size={18} /> Profile</Link>
-                            {user?.role === 'admin' && (
-                                <Link to="/admin/dashboard" className={`nav-item ${activeItem === 'Admin' ? 'active' : ''}`}><Shield size={18} /> Admin Console</Link>
-                            )}
-                        </>
+                    {isAuthenticated && user?.role === 'admin' && (
+                        <Link to="/admin/dashboard" className={`nav-item ${activeItem === 'Admin' ? 'active' : ''}`}><Shield size={18} /> Admin Console</Link>
                     )}
                 </div>
 
