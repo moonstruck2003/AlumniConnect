@@ -30,8 +30,8 @@ class AiChatController extends Controller
         $userMessage = $request->input('message');
 
         try {
-            // Endpoint for Gemini 3.1 Pro Preview (State-of-the-art model for April 2026)
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro-preview:generateContent?key={$apiKey}";
+            // Endpoint for Gemini 1.5 Flash (Fast and accurate for chatbots)
+            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}";
 
             // Constructing the payload with System Instructions and Generation Config
             $prompt = [
