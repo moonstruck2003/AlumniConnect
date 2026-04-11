@@ -22,6 +22,8 @@ import AiChatbot from './components/AiChatbot';
 import { useAuth } from './context/AuthContext';
 
 function App() {
+  const { isAuthenticated } = useAuth();
+
   return (
     <>
       <Routes>

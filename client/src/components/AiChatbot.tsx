@@ -88,18 +88,22 @@ const AiChatbot: React.FC = () => {
         <div className="chat-window">
           <div className="chat-header">
             <div className="header-info">
-              <div className="status-dot"></div>
-              <h3>AlumniBot AI</h3>
+              <div className="bot-avatar">
+                <Bot size={22} color="white" />
+              </div>
+              <div>
+                <h3>AlumniBot AI</h3>
+              </div>
             </div>
-            <button className="icon-btn" onClick={() => setIsOpen(false)} style={{ color: 'white', background: 'none', border: 'none', cursor: 'pointer' }}>
-              <X size={20} />
+            <button className="close-btn" onClick={() => setIsOpen(false)} aria-label="Close chat">
+              <X size={18} />
             </button>
           </div>
 
           <div className="chat-messages">
             {messages.map((msg) => (
               <div key={msg.id} className={`message ${msg.sender}`}>
-                <div className="message-content">{msg.text}</div>
+                {msg.text}
               </div>
             ))}
             {isLoading && (
