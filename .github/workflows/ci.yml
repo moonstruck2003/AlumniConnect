@@ -8,7 +8,7 @@ on:
 
 jobs:
   test-backend:
-    name: Backend Check (PHP 8.2)
+    name: Backend Check (PHP 8.4)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -17,7 +17,7 @@ jobs:
       - name: Setup PHP Environment
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.4'
           extensions: mbstring, pdo_mysql, xml
           coverage: none
 
@@ -46,7 +46,9 @@ jobs:
           node-version: '18'
 
       - name: Verify Npm Install & Vite Build
+        env:
+          VITE_BACKEND_ENDPOINT: http://localhost:8000/api
         run: |
           cd client
           npm install
-          npm run build
+          npx vite build
