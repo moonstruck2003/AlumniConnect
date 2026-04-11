@@ -375,3 +375,26 @@
 .btn-view-profile:active {
     transform: scale(0.98);
 }
+
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 0;
+    color: var(--text-muted);
+}
+
+.spinner {
+    width: 3rem;
+    height: 3rem;
+    border: 3px solid rgba(16, 185, 129, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--accent-emerald);
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

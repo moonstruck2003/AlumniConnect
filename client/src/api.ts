@@ -106,6 +106,36 @@ class ApiClient {
     }
   }
 
+  // Admin Methods
+  async getAdminUsers() {
+    try {
+      const response = await this.client.get('/api/admin/users');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async toggleUserVerification(id: number) {
+    try {
+      const response = await this.client.patch(`/api/admin/users/${id}/verify`);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async getUserProfile(id: number | string) {
+    try {
+      const response = await this.client.get(`/api/users/${id}`);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
   async updateProfile(profileData: any) {
     try {
       const response = await this.client.put('/api/user', profileData);
@@ -265,9 +295,40 @@ class ApiClient {
     }
   }
 
+  // Event API
+  async getEvents() {
+    try {
+      const response = await this.client.get('/api/events');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async createEvent(eventData: { title: string, date: string, time: string, location: string, category: string, image?: string }) {
+    try {
+      const response = await this.client.post('/api/events', eventData);
+      toast.success('Event proposed successfully');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
   async getMentors() {
     try {
       const response = await this.client.get('/api/mentorship/mentors');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async getAlumni() {
+    try {
+      const response = await this.client.get('/api/alumni');
       return response.data;
     } catch (error) {
       this.handleError(error);
@@ -335,6 +396,46 @@ class ApiClient {
   getStorageUrl(path: string) {
     const baseURL = secrets.backendEndpoint || 'http://localhost:8000';
     return `${baseURL}/storage/${path}`;
+  }
+
+  async forgotPassword(email: string) {
+    try {
+      const response = await this.client.post('/api/forgot-password', { email });
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async chatWithAi(message: string) {
+    try {
+      const response = await this.client.post('/api/ai/chat', { message });
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async resetPassword(data: any) {
+    try {
+      const response = await this.client.post('/api/reset-password', data);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async getDashboardStats() {
+    try {
+      const response = await this.client.get('/api/dashboard/stats');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
   }
 
   handleError(error: any) {

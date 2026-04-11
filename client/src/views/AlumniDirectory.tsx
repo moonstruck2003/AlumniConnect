@@ -1,21 +1,15 @@
 import { motion } from 'framer-motion';
-import { Search, Filter, MapPin, Briefcase, GraduationCap, Users, Globe, Building2 } from 'lucide-react';
+import { Search, Filter, MapPin, Briefcase, GraduationCap, Users, Globe, Building2, CheckCircle } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import './AlumniDirectory.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import ApiClient from '../api';
 
-const MOCK_ALUMNI = [
-    { id: 1, firstName: 'Sarah', lastName: 'Johnson', role: 'Senior Software Engineer', company: 'Google', location: 'Mountain View, CA', classYear: '2018', isMentor: true, industry: 'Technology', department: 'Computer Science', skills: ['React', 'Node.js', 'System Design'] },
-    { id: 2, firstName: 'Michael', lastName: 'Chen', role: 'Product Manager', company: 'Microsoft', location: 'Seattle, WA', classYear: '2015', isMentor: true, industry: 'Technology', department: 'Software Engineering', skills: ['Agile', 'Product Strategy', 'UI/UX'] },
-    { id: 3, firstName: 'Emily', lastName: 'Rodriguez', role: 'Marketing Director', company: 'Coca-Cola', location: 'Atlanta, GA', classYear: '2019', isMentor: false, industry: 'Marketing', department: 'Business Administration', skills: ['Brand Management', 'Digital Marketing'] },
-    { id: 4, firstName: 'David', lastName: 'Kim', role: 'Investment Banker', company: 'Goldman Sachs', location: 'New York, NY', classYear: '2020', isMentor: true, industry: 'Finance', department: 'Economics', skills: ['Financial Modeling', 'Valuation'] },
-    { id: 5, firstName: 'Jessica', lastName: 'Wang', role: 'ML Engineer', company: 'Meta', location: 'Menlo Park, CA', classYear: '2021', isMentor: true, industry: 'Technology', department: 'Data Science', skills: ['Python', 'PyTorch', 'Computer Vision'] },
-    { id: 6, firstName: 'Robert', lastName: 'Taylor', role: 'Medical Resident', company: 'General Hospital', location: 'Austin, TX', classYear: '2016', isMentor: false, industry: 'Healthcare', department: 'Medicine', skills: ['Diagnostics', 'Patient Care'] },
-    { id: 7, firstName: 'Aisha', lastName: 'Khan', role: 'UX Designer', company: 'Adobe', location: 'San Francisco, CA', classYear: '2017', isMentor: true, industry: 'Technology', department: 'Computer Science', skills: ['Figma', 'User Research', 'Prototyping'] },
-    { id: 8, firstName: 'James', lastName: 'Wilson', role: 'Data Analyst', company: 'Google', location: 'London, UK', classYear: '2022', isMentor: false, industry: 'Technology', department: 'Mathematics', skills: ['SQL', 'Tableau', 'Statistics'] },
-];
+const api = new ApiClient();
 
 export default function AlumniDirectory() {
+    const [alumniList, setAlumniList] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [mentorsOnly, setMentorsOnly] = useState(false);
     const [industryFilter, setIndustryFilter] = useState('All Industries');
@@ -23,25 +17,43 @@ export default function AlumniDirectory() {
     const [gradYearFilter, setGradYearFilter] = useState('All Years');
     const [showFilters, setShowFilters] = useState(false);
 
-    const filteredAlumni = MOCK_ALUMNI.filter(alumni => {
-        const fullName = `${alumni.firstName} ${alumni.lastName}`.toLowerCase();
-        const searchMatch = fullName.includes(searchQuery.toLowerCase()) ||
-            alumni.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            alumni.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            alumni.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()));
+    useEffect(() => {
+        fetchAlumni();
+    }, []);
 
-        const mentorMatch = mentorsOnly ? alumni.isMentor : true;
+    const fetchAlumni = async () => {
+        setLoading(true);
+        try {
+            const data = await api.getAlumni();
+            if (data && data.alumni) {
+                setAlumniList(data.alumni);
+            }
+        } catch (error) {
+            console.error('Error fetching alumni:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const filteredAlumni = alumniList.filter(alumni => {
+        const fullName = (alumni.name || '').toLowerCase();
+        const searchMatch = fullName.includes(searchQuery.toLowerCase()) ||
+            (alumni.company || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (alumni.job_title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (alumni.skills || []).some((skill: string) => skill.toLowerCase().includes(searchQuery.toLowerCase()));
+
+        const mentorMatch = mentorsOnly ? alumni.is_accepting_mentees : true;
         const industryMatch = industryFilter === 'All Industries' ? true : alumni.industry === industryFilter;
         const departmentMatch = departmentFilter === 'All Departments' ? true : alumni.department === departmentFilter;
-        const gradYearMatch = gradYearFilter === 'All Years' ? true : alumni.classYear === gradYearFilter;
+        const gradYearMatch = gradYearFilter === 'All Years' ? true : alumni.graduation_year === gradYearFilter;
 
         return searchMatch && mentorMatch && industryMatch && departmentMatch && gradYearMatch;
     });
 
     // Stats for Insights
-    const topCompanies = ['Google', 'Microsoft', 'Meta', 'Adobe'];
-    const totalMentors = MOCK_ALUMNI.filter(a => a.isMentor).length;
-    const globalReach = [...new Set(MOCK_ALUMNI.map(a => a.location.split(', ').pop()))].length;
+    const topCompanies = [...new Set(alumniList.map(a => a.company).filter(Boolean))].slice(0, 4);
+    const totalMentors = alumniList.filter(a => a.is_accepting_mentees).length;
+    const globalReach = [...new Set(alumniList.map(a => a.location).filter(Boolean).map(loc => loc.split(', ').pop()))].length;
 
     return (
         <div className="alumni-page">
@@ -54,10 +66,17 @@ export default function AlumniDirectory() {
                         animate={{ opacity: 1, y: 0 }}
                     >
                         <h1 className="page-title">Alumni Directory</h1>
-                        <p className="page-subtitle">Connect with {MOCK_ALUMNI.length} global professionals from our network</p>
+                        <p className="page-subtitle">Connect with {alumniList.length} global professionals from our network</p>
                     </motion.div>
                 </div>
 
+                {loading ? (
+                    <div className="loading-state">
+                        <div className="spinner"></div>
+                        <p>Loading alumni directory...</p>
+                    </div>
+                ) : (
+                    <>
                 {/* Network Insights Section */}
                 <div className="network-insights">
                     <motion.div 
@@ -188,7 +207,7 @@ export default function AlumniDirectory() {
                 </motion.div>
 
                 <div className="results-info">
-                    Showing {filteredAlumni.length} of {MOCK_ALUMNI.length} alumni
+                    Showing {filteredAlumni.length} of {alumniList.length} alumni
                 </div>
 
                 <motion.div
@@ -205,46 +224,54 @@ export default function AlumniDirectory() {
                         >
                             <div className="card-header">
                                 <div className="avatar-initials">
-                                    {alumni.firstName[0]}{alumni.lastName[0]}
+                                    {(alumni.name || 'U').split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
                                 </div>
-                                {alumni.isMentor && (
+                                {alumni.is_accepting_mentees && (
                                     <span className="mentor-badge">Mentor</span>
                                 )}
                             </div>
 
-                            <h3 className="alumni-name">{alumni.firstName} {alumni.lastName}</h3>
-                            <p className="alumni-role">{alumni.role}</p>
+                            <div className="flex items-center gap-2 justify-center">
+                                <h3 className="alumni-name">{alumni.name}</h3>
+                                {alumni.is_verified && (
+                                    <div className="verified-badge" title="Verified Alumni">
+                                        <CheckCircle size={14} fill="#10b981" color="white" />
+                                    </div>
+                                )}
+                            </div>
+                            <p className="alumni-role">{alumni.job_title || 'Alumni'}</p>
 
                                 <div className="alumni-details">
                                     <div className="detail-item">
                                         <Briefcase size={14} />
-                                        <span>{alumni.company}</span>
+                                        <span>{alumni.company || 'Private'}</span>
                                     </div>
                                     <div className="detail-item">
                                         <MapPin size={14} />
-                                        <span>{alumni.location}</span>
+                                        <span>{alumni.location || 'Location Hidden'}</span>
                                     </div>
                                     <div className="detail-item">
                                         <GraduationCap size={14} />
-                                        <span>Class of {alumni.classYear} ({alumni.department})</span>
+                                        <span>Class of {alumni.graduation_year || 'N/A'} ({alumni.department})</span>
                                     </div>
                                 </div>
 
                                 <div className="skills-tags">
-                                    {alumni.skills.map((skill, idx) => (
+                                    {(alumni.skills || []).map((skill: string, idx: number) => (
                                         <span key={idx} className="skill-tag">
                                             {skill}
                                         </span>
                                     ))}
                                 </div>
 
-                            <button className="btn-view-profile">
+                            <button className="btn-view-profile" onClick={() => window.location.href = `/profile/${alumni.id}`}>
                                 View Profile
                             </button>
                         </motion.div>
                     ))}
                 </motion.div>
-
+                </>
+                )}
             </div>
         </div>
     );

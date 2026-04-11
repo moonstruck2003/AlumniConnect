@@ -25,6 +25,11 @@ class User extends Authenticatable
         'cgpa',
         'recruiter_company',
         'is_accepting_mentees',
+        'location',
+        'graduation_year',
+        'industry',
+        'skills',
+        'is_verified',
     ];
 
     protected $hidden = [
@@ -35,6 +40,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'is_accepting_mentees' => 'boolean',
+        'is_verified' => 'boolean',
+        'skills' => 'array',
     ];
 
     public function jobPostings()

@@ -8,7 +8,12 @@ use App\Http\Controllers\Api\MentorshipController;
 use App\Http\Controllers\Api\JobPostingController;
 use App\Http\Controllers\Api\JobApplicationController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\PasswordResetController;
+use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\AiChatController;
+use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\EventController;
 
 
 /*
@@ -23,6 +28,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 */
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
+Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']);
 
 Route::middleware(['jwt'])->group(function () {
     Route::get('/user', function (Request $request) {
@@ -55,6 +62,10 @@ Route::middleware(['jwt'])->group(function () {
     Route::get('/messages/{userId}', [\App\Http\Controllers\MessageController::class, 'getConversation']);
     Route::post('/messages', [\App\Http\Controllers\MessageController::class, 'sendMessage']);
 
+    // Event Routes
+    Route::get('/events', [EventController::class, 'index']);
+    Route::post('/events', [EventController::class, 'store']);
+
     // Notification Routes
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
@@ -62,6 +73,21 @@ Route::middleware(['jwt'])->group(function () {
     Route::patch('/notifications/type/{type}/read', [NotificationController::class, 'markTypeAsRead']);
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
+
+    Route::get('/alumni', [UserController::class, 'alumni']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
+
+    // Admin Routes
+    Route::middleware(['admin'])->group(function () {
+        Route::get('/admin/users', [AdminController::class, 'index']);
+        Route::patch('/admin/users/{id}/verify', [AdminController::class, 'toggleVerification']);
+    });
+
+    // AI Chatbot Route
+    Route::post('/ai/chat', [AiChatController::class, 'chat']);
+
+    // Dashboard Stats Route
+    Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
 });
 
 Route::get('/session', [SessionController::class, 'getSession']);

@@ -5,28 +5,50 @@ import {
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import './Dashboard.css';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import ApiClient from '../api';
 
 export default function Dashboard() {
-
-  const stats = [
-    { icon: <Users size={24} />, color: 'purple', label: 'Total Alumni', value: '12,450', trend: '+5.2%' },
-    { icon: <TrendingUp size={24} />, color: 'green', label: 'Active Mentors', value: '842', trend: '+12.4%' },
-    { icon: <Briefcase size={24} />, color: 'pink', label: 'Job Postings', value: '156', trend: '+8.1%' },
-    { icon: <Calendar size={24} />, color: 'orange', label: 'Upcoming Events', value: '23', trend: '+3.5%' },
-  ];
-
-  const activities = [
+  const navigate = useNavigate();
+  const [statsData, setStatsData] = useState<any>(null);
+  const [activities, setActivities] = useState([
     { avatar: 'S', color: 'blue', text: 'accepted your mentorship request', author: 'Sarah Johnson', time: '2 hours ago' },
     { avatar: 'T', color: 'indigo', text: 'posted a new Software Engineer position', author: 'Tech Corp', time: '5 hours ago' },
     { avatar: 'A', color: 'blue', text: 'Networking Mixer is happening next week', author: 'Alumni Event', time: '1 day ago' },
     { avatar: 'M', color: 'purple', text: 'joined as a mentor', author: 'Michael Chen', time: '2 days ago' },
+  ]);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const client = new ApiClient();
+        const data = await client.getDashboardStats();
+        if (data && data.stats) {
+          setStatsData(data.stats);
+        }
+        if (data && data.activities && data.activities.length > 0) {
+          setActivities(data.activities);
+        }
+      } catch (err) {
+        console.error("Failed to fetch dashboard stats", err);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  const stats = [
+    { icon: <Users size={24} />, color: 'purple', label: 'Total Alumni', value: statsData?.total_alumni ?? '12,450', trend: '' },
+    { icon: <TrendingUp size={24} />, color: 'green', label: 'Active Mentors', value: statsData?.active_mentors ?? '842', trend: '' },
+    { icon: <Briefcase size={24} />, color: 'pink', label: 'Job Postings', value: statsData?.job_postings ?? '156', trend: '' },
+    { icon: <Calendar size={24} />, color: 'orange', label: 'Upcoming Events', value: statsData?.upcoming_events ?? '23', trend: '' },
   ];
 
   const quickActions = [
-    { title: 'Find a Mentor', desc: 'Connect with experienced alumni' },
-    { title: 'Browse Jobs', desc: 'Explore opportunities from alumni' },
-    { title: 'View Directory', desc: 'Search for alumni by industry' },
-    { title: 'Join Events', desc: 'Register for upcoming gatherings' },
+    { title: 'Find a Mentor', desc: 'Connect with experienced alumni', path: '/mentorship' },
+    { title: 'Browse Jobs', desc: 'Explore opportunities from alumni', path: '/jobs' },
+    { title: 'View Directory', desc: 'Search for alumni by industry', path: '/alumni' },
+    { title: 'Join Events', desc: 'Register for upcoming gatherings', path: '/events' },
   ];
 
   return (
@@ -116,6 +138,7 @@ export default function Dashboard() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className="action-card"
+                  onClick={() => navigate(action.path)}
                 >
                   <div className="action-info">
                     <h4>{action.title}</h4>
