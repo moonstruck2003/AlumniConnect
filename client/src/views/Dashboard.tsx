@@ -6,9 +6,11 @@ import {
 import Navbar from '../components/Navbar';
 import './Dashboard.css';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ApiClient from '../api';
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [statsData, setStatsData] = useState<any>(null);
   const [activities, setActivities] = useState([
     { avatar: 'S', color: 'blue', text: 'accepted your mentorship request', author: 'Sarah Johnson', time: '2 hours ago' },
@@ -43,10 +45,10 @@ export default function Dashboard() {
   ];
 
   const quickActions = [
-    { title: 'Find a Mentor', desc: 'Connect with experienced alumni' },
-    { title: 'Browse Jobs', desc: 'Explore opportunities from alumni' },
-    { title: 'View Directory', desc: 'Search for alumni by industry' },
-    { title: 'Join Events', desc: 'Register for upcoming gatherings' },
+    { title: 'Find a Mentor', desc: 'Connect with experienced alumni', path: '/mentorship' },
+    { title: 'Browse Jobs', desc: 'Explore opportunities from alumni', path: '/jobs' },
+    { title: 'View Directory', desc: 'Search for alumni by industry', path: '/alumni' },
+    { title: 'Join Events', desc: 'Register for upcoming gatherings', path: '/events' },
   ];
 
   return (
@@ -136,6 +138,7 @@ export default function Dashboard() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className="action-card"
+                  onClick={() => navigate(action.path)}
                 >
                   <div className="action-info">
                     <h4>{action.title}</h4>
