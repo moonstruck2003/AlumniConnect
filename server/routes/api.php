@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\JobPostingController;
 use App\Http\Controllers\Api\JobApplicationController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PasswordResetController;
+use App\Http\Controllers\Api\AiChatController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
@@ -66,9 +67,11 @@ Route::middleware(['jwt'])->group(function () {
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
 
-    // Alumni Directory
     Route::get('/alumni', [UserController::class, 'alumni']);
     Route::get('/users/{id}', [UserController::class, 'show']);
+
+    // AI Chatbot Route
+    Route::post('/ai/chat', [AiChatController::class, 'chat']);
 });
 
 Route::get('/session', [SessionController::class, 'getSession']);
