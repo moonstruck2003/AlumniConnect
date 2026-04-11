@@ -29,6 +29,7 @@ class User extends Authenticatable
         'graduation_year',
         'industry',
         'skills',
+        'is_verified',
     ];
 
     protected $hidden = [
@@ -39,6 +40,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'is_accepting_mentees' => 'boolean',
+        'is_verified' => 'boolean',
         'skills' => 'array',
     ];
 

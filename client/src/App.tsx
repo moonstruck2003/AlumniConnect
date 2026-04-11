@@ -12,6 +12,8 @@ import './index.css';
 import { Toaster } from 'react-hot-toast';
 import ForgotPassword from './views/ForgotPassword';
 import ResetPassword from './views/ResetPassword';
+import AdminLogin from './views/AdminLogin';
+import AdminDashboard from './views/AdminDashboard';
 import Sessions from './views/Sessions';
 import Events from './views/Events';
 import Mentorship from './views/Mentorship';
@@ -23,11 +25,14 @@ import { useAuth } from './context/AuthContext';
 
 function App() {
   const { isAuthenticated } = useAuth();
+  
 
   return (
     <>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/signup" element={<Signup />} />

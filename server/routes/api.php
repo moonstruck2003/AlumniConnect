@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\AiChatController;
+use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\EventController;
 
@@ -75,6 +76,12 @@ Route::middleware(['jwt'])->group(function () {
 
     Route::get('/alumni', [UserController::class, 'alumni']);
     Route::get('/users/{id}', [UserController::class, 'show']);
+
+    // Admin Routes
+    Route::middleware(['admin'])->group(function () {
+        Route::get('/admin/users', [AdminController::class, 'index']);
+        Route::patch('/admin/users/{id}/verify', [AdminController::class, 'toggleVerification']);
+    });
 
     // AI Chatbot Route
     Route::post('/ai/chat', [AiChatController::class, 'chat']);

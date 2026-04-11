@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { User, Briefcase, Linkedin, FileText, Loader, GraduationCap, Edit2, Save, X } from 'lucide-react';
+import { User, Briefcase, Linkedin, FileText, Loader, GraduationCap, Edit2, Save, X, CheckCircle, ShieldX } from 'lucide-react';
+import Navbar from '../components/Navbar';
 import ApiClient from '../api';
 import './AlumniProfile.css'; // Reusing the same beautiful dark theme CSS
 import toast from 'react-hot-toast';
@@ -16,6 +17,7 @@ interface ProfileData {
   department: string | null;
   student_id: string | null;
   cgpa: string | null;
+  is_verified: boolean;
 }
 
 export default function StudentProfile() {
@@ -45,7 +47,7 @@ export default function StudentProfile() {
       } else {
         throw new Error('Failed to load profile');
       }
-      
+
       // Fetch mentorship requests
       const requestsData = await api.getMentorshipRequests();
       if (requestsData && requestsData.requests) {
@@ -123,17 +125,30 @@ export default function StudentProfile() {
         <div className="profile-header">
           <div className="profile-avatar">{initials}</div>
           {isEditing ? (
-            <input 
-              className="edit-input name-edit" 
-              name="name" 
-              value={formData.name || ''} 
-              onChange={handleInputChange} 
+            <input
+              className="edit-input name-edit"
+              name="name"
+              value={formData.name || ''}
+              onChange={handleInputChange}
             />
           ) : (
-            <h1 className="profile-name">{profile.name}</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="profile-name">{profile.name}</h1>
+              {profile.is_verified ? (
+                <div className="verified-badge-main" title="Verified Account">
+                  <CheckCircle size={20} fill="#10b981" color="white" />
+                  <span className="verified-text">  Verified</span>
+                </div>
+              ) : (
+                <div className="unverified-badge-main" title="Verification Pending">
+                  <ShieldX size={20} className="text-slate-500" />
+                  <span className="unverified-text">Unverified</span>
+                </div>
+              )}
+            </div>
           )}
           <span className="profile-role-badge">Student</span>
-          
+
           <div className="profile-actions">
             {isEditing ? (
               <>
@@ -178,25 +193,25 @@ export default function StudentProfile() {
             <div className="info-item">
               <span className="info-label">Department</span>
               {isEditing ? (
-                  <input className="edit-input" name="department" value={formData.department || ''} onChange={handleInputChange} placeholder="e.g. Computer Science"/>
+                <input className="edit-input" name="department" value={formData.department || ''} onChange={handleInputChange} placeholder="e.g. Computer Science" />
               ) : (
-                  <span className={`info-value ${!profile.department ? 'empty' : ''}`}>{profile.department || 'Not provided'}</span>
+                <span className={`info-value ${!profile.department ? 'empty' : ''}`}>{profile.department || 'Not provided'}</span>
               )}
             </div>
             <div className="info-item">
               <span className="info-label">Student ID</span>
               {isEditing ? (
-                  <input className="edit-input" name="student_id" value={formData.student_id || ''} onChange={handleInputChange} placeholder="e.g. 1910001"/>
+                <input className="edit-input" name="student_id" value={formData.student_id || ''} onChange={handleInputChange} placeholder="e.g. 1910001" />
               ) : (
-                  <span className={`info-value ${!profile.student_id ? 'empty' : ''}`}>{profile.student_id || 'Not provided'}</span>
+                <span className={`info-value ${!profile.student_id ? 'empty' : ''}`}>{profile.student_id || 'Not provided'}</span>
               )}
             </div>
             <div className="info-item">
               <span className="info-label">Current CGPA</span>
               {isEditing ? (
-                  <input className="edit-input" name="cgpa" type="number" step="0.01" value={formData.cgpa || ''} onChange={handleInputChange} placeholder="e.g. 3.8"/>
+                <input className="edit-input" name="cgpa" type="number" step="0.01" value={formData.cgpa || ''} onChange={handleInputChange} placeholder="e.g. 3.8" />
               ) : (
-                  <span className={`info-value ${!profile.cgpa ? 'empty' : ''}`}>{profile.cgpa || 'Not provided'}</span>
+                <span className={`info-value ${!profile.cgpa ? 'empty' : ''}`}>{profile.cgpa || 'Not provided'}</span>
               )}
             </div>
           </div>
@@ -204,27 +219,27 @@ export default function StudentProfile() {
 
         {/* Professional Details (Internships) */}
         <div className="profile-card">
-            <h3 className="card-title">
-              <Briefcase size={20} /> Internships / Experience
-            </h3>
-            <div className="info-grid">
-              <div className="info-item">
-                <span className="info-label">Role Title</span>
-                  {isEditing ? (
-                      <input className="edit-input" name="job_title" value={formData.job_title || ''} onChange={handleInputChange} placeholder="e.g. Software Engineering Intern"/>
-                  ) : (
-                      <span className={`info-value ${!profile.job_title ? 'empty' : ''}`}>{profile.job_title || 'Not provided'}</span>
-                  )}
-              </div>
-              <div className="info-item">
-                <span className="info-label">Company</span>
-                  {isEditing ? (
-                      <input className="edit-input" name="company" value={formData.company || ''} onChange={handleInputChange} placeholder="e.g. Tech Corp"/>
-                  ) : (
-                      <span className={`info-value ${!profile.company ? 'empty' : ''}`}>{profile.company || 'Not provided'}</span>
-                  )}
-              </div>
+          <h3 className="card-title">
+            <Briefcase size={20} /> Internships / Experience
+          </h3>
+          <div className="info-grid">
+            <div className="info-item">
+              <span className="info-label">Role Title</span>
+              {isEditing ? (
+                <input className="edit-input" name="job_title" value={formData.job_title || ''} onChange={handleInputChange} placeholder="e.g. Software Engineering Intern" />
+              ) : (
+                <span className={`info-value ${!profile.job_title ? 'empty' : ''}`}>{profile.job_title || 'Not provided'}</span>
+              )}
             </div>
+            <div className="info-item">
+              <span className="info-label">Company</span>
+              {isEditing ? (
+                <input className="edit-input" name="company" value={formData.company || ''} onChange={handleInputChange} placeholder="e.g. Tech Corp" />
+              ) : (
+                <span className={`info-value ${!profile.company ? 'empty' : ''}`}>{profile.company || 'Not provided'}</span>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Additional Info */}
@@ -236,28 +251,28 @@ export default function StudentProfile() {
             <div className="info-item full-width">
               <span className="info-label">LinkedIn URL</span>
               {isEditing ? (
-                  <input className="edit-input" name="linkedin_url" value={formData.linkedin_url || ''} onChange={handleInputChange} placeholder="https://linkedin.com/in/username"/>
+                <input className="edit-input" name="linkedin_url" value={formData.linkedin_url || ''} onChange={handleInputChange} placeholder="https://linkedin.com/in/username" />
               ) : (
-                  <span className={`info-value ${!profile.linkedin_url ? 'empty' : ''}`}>
-                    {profile.linkedin_url ? (
-                      <a href={profile.linkedin_url} target="_blank" rel="noopener noreferrer">
-                        <Linkedin size={14} style={{ marginRight: '0.3rem', verticalAlign: 'middle' }} />
-                        {profile.linkedin_url}
-                      </a>
-                    ) : (
-                      'Not provided'
-                    )}
-                  </span>
+                <span className={`info-value ${!profile.linkedin_url ? 'empty' : ''}`}>
+                  {profile.linkedin_url ? (
+                    <a href={profile.linkedin_url} target="_blank" rel="noopener noreferrer">
+                      <Linkedin size={14} style={{ marginRight: '0.3rem', verticalAlign: 'middle' }} />
+                      {profile.linkedin_url}
+                    </a>
+                  ) : (
+                    'Not provided'
+                  )}
+                </span>
               )}
             </div>
             <div className="info-item full-width">
               <span className="info-label">About Me</span>
               {isEditing ? (
-                  <textarea className="edit-textarea" name="short_bio" value={formData.short_bio || ''} onChange={handleInputChange} placeholder="Tell us about your interests, projects, and goals..." rows={4}/>
+                <textarea className="edit-textarea" name="short_bio" value={formData.short_bio || ''} onChange={handleInputChange} placeholder="Tell us about your interests, projects, and goals..." rows={4} />
               ) : (
-                  <span className={`info-value ${!profile.short_bio ? 'empty' : ''}`}>
-                    {profile.short_bio || 'No bio added yet'}
-                  </span>
+                <span className={`info-value ${!profile.short_bio ? 'empty' : ''}`}>
+                  {profile.short_bio || 'No bio added yet'}
+                </span>
               )}
             </div>
           </div>

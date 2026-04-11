@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { Search, Filter, MapPin, Briefcase, GraduationCap, Users, Globe, Building2 } from 'lucide-react';
+import { Search, Filter, MapPin, Briefcase, GraduationCap, Users, Globe, Building2, CheckCircle } from 'lucide-react';
+import Navbar from '../components/Navbar';
 import './AlumniDirectory.css';
 import { useState, useEffect } from 'react';
 import ApiClient from '../api';
@@ -228,8 +229,15 @@ export default function AlumniDirectory() {
                                         )}
                                     </div>
 
-                                    <h3 className="alumni-name">{alumni.name}</h3>
-                                    <p className="alumni-role">{alumni.job_title || 'Alumni'}</p>
+                            <div className="flex items-center gap-2 justify-center">
+                                <h3 className="alumni-name">{alumni.name}</h3>
+                                {alumni.is_verified && (
+                                    <div className="verified-badge" title="Verified Alumni">
+                                        <CheckCircle size={14} fill="#10b981" color="white" />
+                                    </div>
+                                )}
+                            </div>
+                            <p className="alumni-role">{alumni.job_title || 'Alumni'}</p>
 
                                     <div className="alumni-details">
                                         <div className="detail-item">
