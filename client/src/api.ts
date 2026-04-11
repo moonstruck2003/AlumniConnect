@@ -274,6 +274,28 @@ class ApiClient {
     }
   }
 
+  // Event API
+  async getEvents() {
+    try {
+      const response = await this.client.get('/api/events');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async createEvent(eventData: { title: string, date: string, time: string, location: string, category: string, image?: string }) {
+    try {
+      const response = await this.client.post('/api/events', eventData);
+      toast.success('Event proposed successfully');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
   async getMentors() {
     try {
       const response = await this.client.get('/api/mentorship/mentors');
