@@ -63,8 +63,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy to Railway
-        run: npx --yes @railway/cli up --service $RAILWAY_SERVICE_ID --project $RAILWAY_PROJECT_ID --environment production --detach
+        run: |
+          npx @railway/cli link --project $RAILWAY_PROJECT_ID --service $RAILWAY_SERVICE_ID
+          npx @railway/cli up --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+          RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
+
