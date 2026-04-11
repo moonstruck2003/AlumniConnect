@@ -79,21 +79,25 @@ export default function Navbar({ activeItem = 'Dashboard' }: NavbarProps) {
                     <Link to="/dashboard" className={`nav-item ${activeItem === 'Dashboard' ? 'active' : ''}`}><LayoutDashboard size={18} /> Dashboard</Link>
                     <Link to="/alumni" className={`nav-item ${activeItem === 'Alumni Directory' ? 'active' : ''}`}><Users size={18} /> Alumni Directory</Link>
                     
-                    <Link to="/mentorship" className={`nav-item ${activeItem === 'Mentorship' ? 'active' : ''}`}>
-                        <div className="nav-icon-badge-wrapper">
-                            <BookOpen size={18} />
-                            {countsByType.mentorship > 0 && <span className="nav-badge-small">{countsByType.mentorship}</span>}
-                        </div>
-                        Mentorship
-                    </Link>
+                    {user?.role !== 'admin' && (
+                        <>
+                            <Link to="/mentorship" className={`nav-item ${activeItem === 'Mentorship' ? 'active' : ''}`}>
+                                <div className="nav-icon-badge-wrapper">
+                                    <BookOpen size={18} />
+                                    {countsByType.mentorship > 0 && <span className="nav-badge-small">{countsByType.mentorship}</span>}
+                                </div>
+                                Mentorship
+                            </Link>
 
-                    <Link to="/jobs" className={`nav-item ${activeItem === 'Jobs & Internships' ? 'active' : ''}`}>
-                        <div className="nav-icon-badge-wrapper">
-                            <Briefcase size={18} />
-                            {countsByType.job_application > 0 && <span className="nav-badge-small">{countsByType.job_application}</span>}
-                        </div>
-                        Jobs & Internships
-                    </Link>
+                            <Link to="/jobs" className={`nav-item ${activeItem === 'Jobs & Internships' ? 'active' : ''}`}>
+                                <div className="nav-icon-badge-wrapper">
+                                    <Briefcase size={18} />
+                                    {countsByType.job_application > 0 && <span className="nav-badge-small">{countsByType.job_application}</span>}
+                                </div>
+                                Jobs & Internships
+                            </Link>
+                        </>
+                    )}
 
                     <Link to="/events" className={`nav-item ${activeItem === 'Events' ? 'active' : ''}`}>
                         <div className="nav-icon-badge-wrapper">
@@ -104,16 +108,21 @@ export default function Navbar({ activeItem = 'Dashboard' }: NavbarProps) {
                     </Link>
 
                     <Link to="/about" className={`nav-item ${activeItem === 'About Us' ? 'active' : ''}`}><Info size={18} /> About Us</Link>
+                    
                     {isAuthenticated && (
                         <>
-                            <Link to="/messages" className={`nav-item ${activeItem === 'Messages' ? 'active' : ''}`}>
-                                <div className="nav-icon-badge-wrapper">
-                                    <MessageSquare size={18} />
-                                    {countsByType.message > 0 && <span className="nav-badge-small">{countsByType.message}</span>}
-                                </div>
-                                Messages
-                            </Link>
-                            <Link to="/profile" className={`nav-item ${activeItem === 'Profile' ? 'active' : ''}`}><UserIcon size={18} /> Profile</Link>
+                            {user?.role !== 'admin' && (
+                                <>
+                                    <Link to="/messages" className={`nav-item ${activeItem === 'Messages' ? 'active' : ''}`}>
+                                        <div className="nav-icon-badge-wrapper">
+                                            <MessageSquare size={18} />
+                                            {countsByType.message > 0 && <span className="nav-badge-small">{countsByType.message}</span>}
+                                        </div>
+                                        Messages
+                                    </Link>
+                                    <Link to="/profile" className={`nav-item ${activeItem === 'Profile' ? 'active' : ''}`}><UserIcon size={18} /> Profile</Link>
+                                </>
+                            )}
                             {user?.role === 'admin' && (
                                 <Link to="/admin/dashboard" className={`nav-item ${activeItem === 'Admin' ? 'active' : ''}`}><Shield size={18} /> Admin Console</Link>
                             )}

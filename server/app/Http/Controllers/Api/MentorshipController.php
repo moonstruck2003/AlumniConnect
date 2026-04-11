@@ -27,13 +27,23 @@ class MentorshipController extends Controller
 
         $mentee = $request->user();
 
+        if ($mentee->role !== 'student') {
+            return response()->json(['message' => 'Only students are eligible to apply for mentorship.'], 403);
+        }
+
+        $mentor = User::find($request->mentor_id);
+        if (!$mentor || $mentor->role !== 'alumni') {
+            return response()->json(['message' => 'Mentorship can only be requested from alumni.'], 400);
+        }
+
         // Check if a request already exists
         $existing = MentorshipRequest::where('mentor_id', $request->mentor_id)
             ->where('mentee_id', $mentee->id)
+            ->where('status', '!=', 'rejected') // Allow re-applying if rejected? Usually best to keep record.
             ->first();
 
         if ($existing) {
-            return response()->json(['message' => 'A mentorship request already exists for this mentor. Check your requests.'], 400);
+            return response()->json(['message' => 'You have already applied for this mentor.'], 400);
         }
 
         $mentorshipRequest = MentorshipRequest::create([
