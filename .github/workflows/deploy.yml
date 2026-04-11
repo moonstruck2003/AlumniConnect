@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/ci-fix-userfactory
   pull_request:
     branches:
       - main
@@ -63,20 +64,6 @@ jobs:
 
       - name: Generate JWT secret (CI Only)
         run: cd server && php artisan jwt:secret --no-interaction
-
-      - name: Inject temporary test infrastructure (CI ENVIRONMENT ONLY)
-        run: |
-          cd server/database
-          mkdir -p factories migrations
-          
-          # Hallucinate missing UserFactory (Targeted fix for PHPUnit)
-          echo '<?php namespace Database\Factories; use App\Models\User; use Illuminate\Database\Eloquent\Factories\Factory; use Illuminate\Support\Str; use Illuminate\Support\Facades\Hash; class UserFactory extends Factory { protected $model = User::class; public function definition() { return [ "name" => "Test User", "email" => "test_" . Str::random(5) . "@example.com", "email_verified_at" => now(), "password" => Hash::make("password"), "role" => "student", "remember_token" => Str::random(10) ]; } }' > factories/UserFactory.php
-          
-          # Hallucinate base migrations (To avoid "users table missing" error)
-          echo '<?php use Illuminate\Database\Migrations\Migration; use Illuminate\Database\Schema\Blueprint; use Illuminate\Support\Facades\Schema; class CreateUsersTable extends Migration { public function up() { if (!Schema::hasTable("users")) { Schema::create("users", function (Blueprint $table) { $table->id(); $table->string("name"); $table->string("email")->unique(); $table->timestamp("email_verified_at")->nullable(); $table->string("password"); $table->string("role")->default("student"); $table->rememberToken(); $table->timestamps(); }); } } }' > migrations/2014_10_12_000000_create_users_table.php
-          
-          # Patch empty migrations that tests depend on
-          echo '<?php use Illuminate\Database\Migrations\Migration; use Illuminate\Database\Schema\Blueprint; use Illuminate\Support\Facades\Schema; class CreateJobPostingsTable extends Migration { public function up() { if (!Schema::hasTable("job_postings")) { Schema::create("job_postings", function (Blueprint $table) { $table->id(); $table->foreignId("user_id"); $table->string("title"); $table->string("company"); $table->timestamps(); }); } } }' > migrations/2026_03_28_114213_create_job_postings_table.php
 
       - name: Prepare database for testing
         run: cd server && php artisan migrate:fresh --force
