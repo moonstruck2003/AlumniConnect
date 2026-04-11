@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\AiChatController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\EventController;
 
 
 /*
@@ -59,6 +60,10 @@ Route::middleware(['jwt'])->group(function () {
     Route::get('/messages/conversations', [\App\Http\Controllers\MessageController::class, 'getConversations']);
     Route::get('/messages/{userId}', [\App\Http\Controllers\MessageController::class, 'getConversation']);
     Route::post('/messages', [\App\Http\Controllers\MessageController::class, 'sendMessage']);
+
+    // Event Routes
+    Route::get('/events', [EventController::class, 'index']);
+    Route::post('/events', [EventController::class, 'store']);
 
     // Notification Routes
     Route::get('/notifications', [NotificationController::class, 'index']);
