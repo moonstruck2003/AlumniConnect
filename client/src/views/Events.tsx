@@ -77,7 +77,9 @@ export default function Events() {
     const fetchEvents = async () => {
       try {
         const response = await api.getEvents();
-        setEvents(response || []);
+        // Ensure we always have an array
+        const eventsData = Array.isArray(response) ? response : (response?.data && Array.isArray(response.data) ? response.data : []);
+        setEvents(eventsData);
         await api.markNotificationsTypeRead('event').catch(() => {});
       } catch (error) {
         console.error('Error fetching events:', error);
@@ -92,7 +94,7 @@ export default function Events() {
 
   const monthMap: { [key: string]: number } = { JAN: 0, FEB: 1, MAR: 2, APR: 3, MAY: 4, JUN: 5, JUL: 6, AUG: 7, SEP: 8, OCT: 9, NOV: 10, DEC: 11 };
 
-  const filteredEvents = (events || [])
+  const filteredEvents = (Array.isArray(events) ? events : [])
     .filter(event => {
       const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                             event.location.toLowerCase().includes(searchTerm.toLowerCase());
