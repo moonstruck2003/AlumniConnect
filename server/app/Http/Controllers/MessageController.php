@@ -88,11 +88,26 @@ class MessageController extends Controller
     {
         $currentUserId = auth()->id();
 
-        $sentIds = Message::query()->where('sender_id', $currentUserId)->pluck('receiver_id')->toArray();
-        $receivedIds = Message::query()->where('receiver_id', $currentUserId)->pluck('sender_id')->toArray();
-        $userIds = collect(array_merge($sentIds, $receivedIds))->unique();
+        // Get unique user IDs involved in conversations with sorting by latest message
+        $userIds = Message::query()
+            ->where('sender_id', $currentUserId)
+            ->orWhere('receiver_id', $currentUserId)
+            ->selectRaw('CASE WHEN sender_id = ? THEN receiver_id ELSE sender_id END as contact_id', [$currentUserId])
+            ->selectRaw('MAX(created_at) as last_message_at')
+            ->groupBy('contact_id')
+            ->orderBy('last_message_at', 'desc')
+            ->get();
 
-        $users = User::query()->whereIn('id', $userIds)->get(['id', 'name', 'job_title', 'company']);
+        $sortedIds = $userIds->pluck('contact_id')->toArray();
+
+        // Fetch users and preserve the sort order
+        $users = User::query()
+            ->whereIn('id', $sortedIds)
+            ->get(['id', 'name', 'job_title', 'company'])
+            ->sortBy(function ($user) use ($sortedIds) {
+                return array_search($user->id, $sortedIds);
+            })
+            ->values();
 
         return response()->json($users);
     }
