@@ -177,13 +177,20 @@ export default function Mentorship() {
                       <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
                         {user?.role === 'student' ? (
                           <>
-                            {requests.some(req => req.mentor_id === mentor.id) ? (
+                            {requests.some(req => req.mentor_id === mentor.id && req.status !== 'rejected') ? (
                               <button 
                                 className="action-btn" 
                                 disabled
-                                style={{ flex: 1, opacity: 0.6, cursor: 'not-allowed', backgroundColor: '#4a5568' }}
+                                style={{ 
+                                  flex: 1, 
+                                  opacity: 0.6, 
+                                  cursor: 'not-allowed', 
+                                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                                  color: '#94a3b8'
+                                }}
                               >
-                                Applied
+                                applied
                               </button>
                             ) : (
                               <button 

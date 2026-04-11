@@ -33,6 +33,7 @@ header {
 main {
   flex: 1;
   padding: 1em;
+  padding-top: 80px; /* Space for the fixed navbar */
 }
 
 footer {
