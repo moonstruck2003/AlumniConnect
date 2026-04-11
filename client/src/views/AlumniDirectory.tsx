@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import { Search, Filter, MapPin, Briefcase, GraduationCap, Users, Globe, Building2, CheckCircle } from 'lucide-react';
-import Navbar from '../components/Navbar';
 import './AlumniDirectory.css';
 import { useState, useEffect } from 'react';
 import ApiClient from '../api';
