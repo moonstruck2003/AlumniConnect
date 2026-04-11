@@ -43,6 +43,7 @@ function App() {
           <Route path="/mentorship" element={<Mentorship />} />
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/profile" element={<ProfileRouter />} />
+          <Route path="/profile/:id" element={<ProfileRouter />} />
         </Route>
       </Routes>
       <Toaster

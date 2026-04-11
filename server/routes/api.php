@@ -65,6 +65,7 @@ Route::middleware(['jwt'])->group(function () {
 
     // Alumni Directory
     Route::get('/alumni', [UserController::class, 'alumni']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
 });
 
 Route::get('/session', [SessionController::class, 'getSession']);

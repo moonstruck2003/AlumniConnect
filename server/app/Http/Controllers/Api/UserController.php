@@ -80,4 +80,10 @@ class UserController extends Controller
         $alumni = User::where('role', 'alumni')->get();
         return response()->json(['alumni' => $alumni]);
     }
+
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
+        return response()->json(['user' => $user]);
+    }
 }

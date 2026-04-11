@@ -106,6 +106,15 @@ class ApiClient {
     }
   }
 
+  async getUserProfile(id: number | string) {
+    try {
+      const response = await this.client.get(`/api/users/${id}`);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
   async updateProfile(profileData: any) {
     try {
       const response = await this.client.put('/api/user', profileData);
