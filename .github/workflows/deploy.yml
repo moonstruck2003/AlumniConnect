@@ -2,9 +2,9 @@ name: AlumniConnect Build Gate
 
 on:
   push:
-    branches: [ "dev", "main" ]
+    branches: [ "dev", "main", "fix/ci-verification" ]
   pull_request:
-    branches: [ "dev", "main" ]
+    branches: [ "dev", "main", "fix/ci-verification" ]
 
 jobs:
   backend-build:
@@ -24,6 +24,12 @@ jobs:
       - name: Verify Build
         run: cd server && composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-reqs
 
+      - name: Run Backend Tests
+        run: cd server && php artisan test
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
+
   frontend-build:
     name: Verify Frontend (React)
     runs-on: ubuntu-latest
@@ -38,3 +44,6 @@ jobs:
 
       - name: Verify Build
         run: cd client && npm install && npm run build
+
+      - name: Run Frontend Linting
+        run: cd client && npm run lint

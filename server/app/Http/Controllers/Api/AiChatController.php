@@ -30,8 +30,8 @@ class AiChatController extends Controller
         $userMessage = $request->input('message');
 
         try {
-            // Endpoint for Gemini Pro (Universally supported FREE text model)
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={$apiKey}";
+            // Endpoint for Gemini 1.5 Flash (Stable v1 endpoint for guaranteed compatibility)
+            $url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={$apiKey}";
 
             $systemContext = "You are 'AlumniBot', the high-end official AI assistant for the 'AlumniConnect' platform. 
 
